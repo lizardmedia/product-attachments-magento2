@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Data API section -->
+    <preference for="LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface" type="LizardMedia\ProductAttachment\Model\AttachmentFactory"/>
+    <preference for="LizardMedia\ProductAttachment\Api\Data\AttachmentInterface" type="LizardMedia\ProductAttachment\Model\Attachment"/>
+    <!-- End of data API section -->
+
+    <!-- Data file API section -->
+    <preference for="LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface" type="LizardMedia\ProductAttachment\Model\File\ContentUploader"/>
+    <!-- End of data file API section -->
+
+
+    <!-- API section -->
+    <preference for="LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface" type="LizardMedia\ProductAttachment\Model\AttachmentRepository"/>
+    <preference for="LizardMedia\ProductAttachment\Api\PurchasedItemsAttachmentProviderInterface" type="LizardMedia\ProductAttachment\Model\Customer\PurchasedItemsAttachmentProvider"/>
+    <preference for="LizardMedia\ProductAttachment\Api\SettingsInterface" type="LizardMedia\ProductAttachment\Helper\Settings"/>
+    <!-- End of API section -->
+
+
+    <!-- Proxy section -->
+    <type name="LizardMedia\ProductAttachment\Model\AttachmentRepository">
+        <arguments>
+            <argument name="productRepository" xsi:type="object">Magento\Catalog\Api\ProductRepositoryInterface\Proxy</argument>
+            <argument name="searchResultsFactory" xsi:type="object">Magento\Framework\Api\SearchResultsInterfaceFactory\Proxy</argument>
+            <argument name="metadataPool" xsi:type="object">Magento\Framework\EntityManager\MetadataPool\Proxy</argument>
+            <argument name="jsonSeliarizer" xsi:type="object">Magento\Framework\Serialize\Serializer\Json\Proxy</argument>
+        </arguments>
+    </type>
+
+    <type name="LizardMedia\ProductAttachment\Model\PurchasedItemsAttachmentProvider">
+        <arguments>
+            <argument name="orderItemRepository" xsi:type="object">Magento\Sales\Api\OrderItemRepositoryInterface\Proxy</argument>
+            <argument name="orderRepository" xsi:type="object">Magento\Sales\Api\OrderRepositoryInterface\Proxy</argument>
+        </arguments>
+    </type>
+
+
+    <type name="LizardMedia\ProductAttachment\Model\Attachment\Builder">
+        <arguments>
+            <argument name="downloadableFile" xsi:type="object">Magento\Downloadable\Helper\File\Proxy</argument>
+        </arguments>
+    </type>
+    <!-- End of proxy section -->
+
+
+    <!-- Type handlers section -->
+    <type name="Magento\Downloadable\Model\Product\TypeHandler\TypeHandler">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="attachment" xsi:type="object">LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- End of type handlers section -->
+
+
+    <!-- Extension pool section -->
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Magento\Catalog\Api\Data\ProductInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="product_attachment_read" xsi:type="string">LizardMedia\ProductAttachment\Model\Attachment\ReadHandler</item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="product_attachment_create" xsi:type="string">LizardMedia\ProductAttachment\Model\Attachment\CreateHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="product_attachment_update" xsi:type="string">LizardMedia\ProductAttachment\Model\Attachment\UpdateHandler</item>
+                    </item>
+                    <item name="delete" xsi:type="array">
+                        <item name="product_attachment_delete" xsi:type="string">LizardMedia\ProductAttachment\Model\Attachment\DeleteHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- End of extension pool section -->
+
+
+    <!-- MetadataPool section -->
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="LizardMedia\ProductAttachment\Api\Data\AttachmentInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">lizardmedia_product_attachment</item>
+                    <item name="identifierField" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- End of metadataPool section -->
+
+</config>

@@ -1,0 +1,55 @@
+<?php
+/** @var $block \LizardMedia\ProductAttachment\Block\Customer\Account\AttachmentList */
+?>
+<?php $attachments = $block->getAttachments() ?>
+<?php if ($attachments->getSize() > 0): ?>
+    <div class="table-wrapper downloadable-products">
+        <table id="my-downloadable-products-table" class="data table table-downloadable-products">
+            <caption class="table-caption"><?= __('My attachments') ?></caption>
+            <thead>
+            <tr>
+                <th scope="col" class="col id"><?= __('Product') ?></th>
+                <th scope="col" class="col title"><?= __('Title') ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($attachments as $attachment) : ?>
+                <tr>
+                    <td data-th="<?= $block->escapeHtml(__('Product')) ?>" class="col id">
+                        <strong class="product-name"><?= $block->escapeHtml(
+                                $attachment->getCatalogProductName()
+                                ? $attachment->getCatalogProductName()
+                                : $attachment->getCatalogProductNameDefault()
+                            ); ?>
+                        </strong>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Title')) ?>" class="col title">
+                        <a href="<?= $block->escapeUrl($block->getDownloadUrl($attachment)) ?>"
+                           title="<?= $block->escapeHtml(__('Start download')) ?>"
+                           class="action download"
+                           <?= $block->getIsOpenInNewWindow() ? 'onclick="this.target=\'_blank\'"' : '' ?>>
+                           <?= $block->escapeHtml($attachment->getTitle()) ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="toolbar downloadable-products-toolbar bottom">
+        <?= $block->getChildHtml('lizard_attachment_list_pager') ?>
+    </div>
+<?php else : ?>
+    <div class="message info empty">
+        <span><?= /* @escapeNotVerified */ __('You have not products\' attachments yet.') ?></span>
+    </div>
+<?php endif; ?>
+
+<div class="actions-toolbar">
+    <div class="secondary">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
+            <span><?= __('Back') ?></span>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product.info.details">
+            <block class="LizardMedia\ProductAttachment\Block\Product\AttachmentTab" name="attachments.tab"
+                   template="LizardMedia_ProductAttachment::product/view/attachment-tab.phtml" group="detailed_info">
+                <action method="setTitle">
+                    <argument translate="true" name="title" xsi:type="string">Attachments</argument>
+                </action>
+            </block>
+        </referenceBlock>
+    </body>
+</page>
