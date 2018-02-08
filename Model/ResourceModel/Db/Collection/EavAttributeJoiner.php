@@ -253,7 +253,6 @@ class EavAttributeJoiner
 
                 $this->addRecordToJoinReturnData($entityTypeCode, $attributeCode, $typeTableAlias, self::VALUE_FIELD);
                 $this->addRecordToJoinReturnData($entityTypeCode, $attributeCode, $typeTableAliasDefault, self::VALUE_FIELD);
-
             } else {
                 $collection->getSelect()->joinLeft(
                     [$entityTableAlias => $this->entityTable],

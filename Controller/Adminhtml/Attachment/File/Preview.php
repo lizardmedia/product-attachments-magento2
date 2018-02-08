@@ -85,7 +85,6 @@ class Preview extends Action
         $attachmentId = $this->getRequest()->getParam(Attachment::ID, 0);
         $attachment = $this->loadAttachmentById((int) $attachmentId);
         if ($attachment instanceof AttachmentInterface) {
-
             if ($attachment->getAttachmentType() == DownloadHelper::LINK_TYPE_URL) {
                 $this->processUrlType($attachment);
             } elseif ($attachment->getAttachmentType() == DownloadHelper::LINK_TYPE_FILE) {

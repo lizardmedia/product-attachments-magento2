@@ -120,7 +120,8 @@ class Attachment extends AbstractTypeHandler
             $data[AttachmentModel::ATTACHMENT_TYPE]
         )->setProductId(
             (int) $product->getData(
-                $this->getMetadataPool()->getMetadata(ProductInterface::class)->getLinkField())
+                $this->getMetadataPool()->getMetadata(ProductInterface::class)->getLinkField()
+            )
         );
         $component->setStoreId(
             (int) $product->getStoreId()

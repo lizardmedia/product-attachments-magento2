@@ -50,8 +50,7 @@ class Index extends Action
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
      */
-    public function __construct
-    (
+    public function __construct(
         Session $customerSession,
         Url $customerUrl,
         Context $context,

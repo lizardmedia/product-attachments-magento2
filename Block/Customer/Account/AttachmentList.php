@@ -99,7 +99,6 @@ class AttachmentList extends Template
             $this->getChildBlock('lizard_attachment_list_pager')
                 ->setCollection($attachments)
                 ->setPath('downloadable/customer/attachment_index');
-
         }
         return $this;
     }

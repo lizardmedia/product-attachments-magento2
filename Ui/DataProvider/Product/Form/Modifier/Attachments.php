@@ -87,7 +87,6 @@ class Attachments extends AbstractModifier
         $this->arrayManager = $arrayManager;
         $this->urlBuilder = $urlBuilder;
         $this->storeManager = $storeManager;
-
     }
 
 

@@ -51,8 +51,7 @@ class Attachment extends Action
      * @param \Magento\Downloadable\Helper\File $fileHelper
      * @param \Magento\Framework\App\Action\Context $context
      */
-    public function __construct
-    (
+    public function __construct(
         AttachmentRepositoryInterface $attachmentRepository,
         DownloadProcessor $downloadProcessor,
         FileHelper $fileHelper,
