@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Section adding tabs, fieldsets etc. for product form -->
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="product_attachment" xsi:type="array">
+                    <item name="class" xsi:type="string">LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Composite</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Composite">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="attachmentPanel" xsi:type="string">LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\AttachmentPanel</item>
+                <item name="attachments" xsi:type="string">LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Attachments</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- End of section -->
+
+
+    <!-- Plugin section -->
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
+        <plugin name="Downloadable" type="LizardMedia\ProductAttachment\Plugin\InitForSave" sortOrder="70" />
+    </type>
+    <!-- End of plugin section -->
+
+
+    <!-- Proxy section -->
+    <type name="LizardMedia\ProductAttachment\Controller\Adminhtml\Attachment\File\Preview">
+        <arguments>
+            <argument name="downloadProcessor" xsi:type="object">LizardMedia\ProductAttachment\Controller\DownloadProcessor\Proxy</argument>
+        </arguments>
+    </type>
+    <!-- End of proxy section -->
+
+</config>

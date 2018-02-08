@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Secure url section -->
+    <type name="Magento\Framework\Url\SecurityInfo">
+        <arguments>
+            <argument name="secureUrlList" xsi:type="array">
+                <item name="customer_attachments" xsi:type="string">/customer/attachment/index</item>
+                <item name="downloadable_customer_attachment_index" xsi:type="string">/downloadable/customer/attachment_index</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- End of secure url section -->
+
+
+    <!-- Proxy section -->
+    <type name="LizardMedia\ProductAttachment\Controller\Download\Attachment">
+        <arguments>
+            <argument name="downloadProcessor" xsi:type="object">LizardMedia\ProductAttachment\Controller\DownloadProcessor\Proxy</argument>
+        </arguments>
+    </type>
+    <!-- End of proxy section -->
+
+</config>

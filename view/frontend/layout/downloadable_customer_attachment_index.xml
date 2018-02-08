@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <update handle="customer_account"/>
+    <head>
+        <title>My attachments</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="LizardMedia\ProductAttachment\Block\Customer\Account\AttachmentList"
+                   name="lizard_attachment_list" template="customer/account/attachment-list.phtml" cacheable="false">
+                <block class="Magento\Theme\Block\Html\Pager" name="lizard_attachment_list_pager" />
+            </block>
+        </referenceContainer>
+    </body>
+</page>

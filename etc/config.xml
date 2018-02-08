@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!--
+/**
+ * @author Bartosz Kubicki <bartosz.kubicki@lizardmedia.pl>
+ * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <catalog>
+            <product_attachments>
+                <default_title>Attachments</default_title>
+                <links_target_new_window>1</links_target_new_window>
+                <content_disposition>inline</content_disposition>
+            </product_attachments>
+        </catalog>
+    </default>
+</config>

@@ -1,0 +1,34 @@
+<?php /** @var $block LizardMedia\ProductAttachment\Block\Product\AttachmentTab */ ?>
+<div id="product-attachments-container" data-role="product-attachments"></div>
+
+<?php $attachments = $block->getAttachments() ?>
+<?php if (count($attachments)) : ?>
+    <div class="table-wrapper attachments">
+        <table class="data table">
+            <thead>
+            <tr>
+                <th scope="col" class="col title"><?= __('Title') ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($attachments as $attachment) : ?>
+                <tr>
+                    <td data-th="<?= $block->escapeHtml(__('Title')) ?>" class="col title">
+                        <a href="<?= $block->escapeUrl($block->getDownloadUrl($attachment)) ?>"
+                           title="<?= $block->escapeHtml(__('Start download')) ?>"
+                           class="action download"
+                            <?= $block->getIsOpenInNewWindow() ? 'onclick="this.target=\'_blank\'"' : '' ?>>
+                            <?= $block->escapeHtml($attachment->getTitle()) ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+<?php else : ?>
+    <div class="message info empty">
+        <span><?= /* @escapeNotVerified */ __('This products does not contain any attachments.') ?></span>
+    </div>
+<?php endif; ?>
