@@ -13,7 +13,7 @@ namespace LizardMedia\ProductAttachment\Model\ResourceModel\Attachment;
 
 use \LizardMedia\ProductAttachment\Model\Attachment;
 use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment as AttachmentResource;
-use \LizardMedia\ProductAttachments\Model\ResourceModel\Db\Collection\EavAttributeJoiner;
+use \LizardMedia\ProductAttachment\Model\ResourceModel\Db\Collection\EavAttributeJoiner;
 use \Magento\Catalog\Api\Data\ProductAttributeInterface;
 use \Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
 use \Magento\Framework\Data\Collection\EntityFactoryInterface;
@@ -31,7 +31,7 @@ use \Psr\Log\LoggerInterface;
 class Collection extends AbstractCollection
 {
     /**
-     * @var \LizardMedia\ProductAttachments\Model\ResourceModel\Db\Collection\EavAttributeJoiner
+     * @var \LizardMedia\ProductAttachment\Model\ResourceModel\Db\Collection\EavAttributeJoiner
      */
     private $eavAttributeJoiner;
 
@@ -43,7 +43,7 @@ class Collection extends AbstractCollection
 
 
     /**
-     * @param \LizardMedia\ProductAttachments\Model\ResourceModel\Db\Collection\EavAttributeJoiner $eavAttributeJoiner
+     * @param \LizardMedia\ProductAttachment\Model\ResourceModel\Db\Collection\EavAttributeJoiner $eavAttributeJoiner
      * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
      * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
      * @param \Magento\Framework\Event\ManagerInterface $eventManager

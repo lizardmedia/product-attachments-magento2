@@ -16,7 +16,7 @@ use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
 use \LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface;
 use \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
 use \LizardMedia\ProductAttachment\Model\Attachment\ContentValidator;
-use \LizardMedia\ProductAttachments\Model\AttachmentRepository\SearchResultProcessor;
+use \LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor;
 use \LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment as AttachmentHandler;
 use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection as AttachmentCollection;
 use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection;
@@ -59,7 +59,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @var \LizardMedia\ProductAttachments\Model\AttachmentRepository\SearchResultProcessor
+     * @var \LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor
      */
     private $searchResultProcessor;
 
@@ -110,7 +110,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface $attachmentFactory
      * @param \LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface $fileContentUploader
      * @param \LizardMedia\ProductAttachment\Model\Attachment\ContentValidator $contentValidator
-     * @param \LizardMedia\ProductAttachments\Model\AttachmentRepository\SearchResultProcessor $searchResultProcessor
+     * @param \LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor $searchResultProcessor
      * @param \LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment $attachmentTypeHandler
      * @param \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\CollectionFactory $attachmentCollectionFactory
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository

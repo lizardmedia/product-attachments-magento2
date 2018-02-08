@@ -70,8 +70,7 @@ class AttachmentList extends Template
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param array $data
      */
-    public function __construct
-    (
+    public function __construct(
         PurchasedItemsAttachmentProviderInterface $purchasedItemsAttachmentProvider,
         SettingsInterface $settings,
         CurrentCustomer $currentCustomer,
@@ -118,7 +117,6 @@ class AttachmentList extends Template
                 $this->collection = $this->purchasedItemsAttachmentProvider->get($customer);
                 $this->isCollectionLoaded = true;
             } catch (\Exception $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
                 $this->messageManager->addErrorMessage(
                     __('Something went wrong, please contact the store support')
                 );
