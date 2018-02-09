@@ -9,7 +9,7 @@ declare(strict_types = 1);
  * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
  */
 
-namespace LizardMedia\ProductAttachments\Model\AttachmentRepository;
+namespace LizardMedia\ProductAttachment\Model\AttachmentRepository;
 
 use \Magento\Framework\Api\SearchCriteriaInterface;
 use \Magento\Framework\Api\SortOrder;

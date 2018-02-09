@@ -9,7 +9,7 @@ declare(strict_types = 1);
  * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
  */
 
-namespace LizardMedia\ProductAttachments\Model\ResourceModel\Db\Collection;
+namespace LizardMedia\ProductAttachment\Model\ResourceModel\Db\Collection;
 
 use \Magento\Eav\Api\AttributeRepositoryInterface;
 use \Magento\Eav\Model\Entity\Type as EntityTypeModel;
@@ -253,7 +253,6 @@ class EavAttributeJoiner
 
                 $this->addRecordToJoinReturnData($entityTypeCode, $attributeCode, $typeTableAlias, self::VALUE_FIELD);
                 $this->addRecordToJoinReturnData($entityTypeCode, $attributeCode, $typeTableAliasDefault, self::VALUE_FIELD);
-
             } else {
                 $collection->getSelect()->joinLeft(
                     [$entityTableAlias => $this->entityTable],

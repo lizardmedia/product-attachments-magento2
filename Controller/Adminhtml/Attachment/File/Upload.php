@@ -111,7 +111,6 @@ class Upload extends File
                 'path' => $this->_getSession()->getCookiePath(),
                 'domain' => $this->_getSession()->getCookieDomain(),
             ];
-
         } catch (\Exception $e) {
             $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
         }

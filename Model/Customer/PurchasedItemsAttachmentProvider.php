@@ -66,8 +66,7 @@ class PurchasedItemsAttachmentProvider implements PurchasedItemsAttachmentProvid
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
-    public function __construct
-    (
+    public function __construct(
         CollectionFactory $collectionFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         OrderItemRepositoryInterface $orderItemRepository,

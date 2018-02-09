@@ -110,13 +110,15 @@ class Attachment extends AbstractDb
         $defaultBind = [':attachment_id' => (int) $attachment->getId(), ':store_id' => 0];
 
         $selectStore = $connection->select()->from(
-            $attachmentTitleTable, AttachmentModel::TITLE
+            $attachmentTitleTable,
+            AttachmentModel::TITLE
         )->where(
             'attachment_id = :attachment_id AND store_id = :store_id'
         );
 
         $select = $connection->select()->from(
-            $attachmentTitleTable, AttachmentModel::TITLE
+            $attachmentTitleTable,
+            AttachmentModel::TITLE
         )->where(
             'attachment_id = :attachment_id'
         )->where('store_id = :store_id');
