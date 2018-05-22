@@ -1,3 +1,8 @@
+[![Latest Stable Version](https://poser.pugx.org/lizardmedia/module-product-attachments/v/stable)](https://packagist.org/packages/lizardmedia/module-product-attachments)
+[![Total Downloads](https://poser.pugx.org/lizardmedia/module-product-attachments/downloads)](https://packagist.org/packages/lizardmedia/module-product-attachments)
+[![License](https://poser.pugx.org/lizardmedia/module-product-attachments/license)](https://packagist.org/packages/lizardmedia/module-product-attachments)
+
+
 # Magento 2 Product Attachments
 
 Module `LizardMedia_ProductAttachment` adds possibility to add attachment for products.
@@ -8,7 +13,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-
 * Magento 2.2
 * PHP 7.1
 
@@ -18,19 +22,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 ##### Using composer (suggested)
 
-Add the repository to your composer.json
-```
-"repositories": [
-    {
-        "type": "vcs",
-        "url": "https://github.com/lizardmedia/product-attachments-magento2"
-    }
-]
-```
-and run
+Simply run
 
 ```
-composer require lizardmedia/product-attachments-magento2
+composer require lizardmedia/module-product-attachments
 ```
 
 ##### Downloading ZIP
@@ -38,11 +33,6 @@ composer require lizardmedia/product-attachments-magento2
 Download a ZIP version of the module and unpack it into your project into
 ```
 app/code/LizardMedia/ProductAttachment
-```
-If you use ZIP file you will need to install the dependencies of the module
-manually
-```
-composer require stil/curl-easy:^1.1
 ```
 
 #### Install the module
@@ -85,7 +75,7 @@ See also the list of [contributors](https://github.com/lizardmedia/product-attac
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## To do
 
