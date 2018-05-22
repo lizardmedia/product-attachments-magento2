@@ -1,5 +1,5 @@
 {
-    "name": "lizardmedia/module-config",
+    "name": "lizardmedia/module-product-attachments",
     "description": "Products attachment by LizardMedia",
     "require": {
         "php": "~7.1.0",
