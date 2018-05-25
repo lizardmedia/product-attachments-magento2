@@ -6,7 +6,7 @@
         "magento/module-downloadable": "*"
     },
     "type": "magento2-module",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": [
         "MIT"
     ],
@@ -17,5 +17,14 @@
         "psr-4": {
             "LizardMedia\\ProductAttachment\\": ""
         }
-    }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ]
 }

@@ -1,7 +1,8 @@
 [![Latest Stable Version](https://poser.pugx.org/lizardmedia/module-product-attachments/v/stable)](https://packagist.org/packages/lizardmedia/module-product-attachments)
 [![Total Downloads](https://poser.pugx.org/lizardmedia/module-product-attachments/downloads)](https://packagist.org/packages/lizardmedia/module-product-attachments)
 [![License](https://poser.pugx.org/lizardmedia/module-product-attachments/license)](https://packagist.org/packages/lizardmedia/module-product-attachments)
-
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lizardmedia/product-attachments-magento2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lizardmedia/product-attachments-magento2/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/lizardmedia/product-attachments-magento2/badges/build.png?b=master)](https://scrutinizer-ci.com/g/lizardmedia/product-attachments-magento2/build-status/master)
 
 # Magento 2 Product Attachments
 
