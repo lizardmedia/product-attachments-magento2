@@ -48,11 +48,25 @@ bin/magento setup:upgrade
 
 #### Admin panel
 
-* add and manage attachments to product via adminhtml form
+* add and manage attachments to product via product edit form
+
+![admin](https://user-images.githubusercontent.com/20238194/47045731-d2183680-d193-11e8-8410-9f2a93f88c44.png)
 
 #### Frontend
+
 * display attachments on product view page
+
+![front-product-page](https://user-images.githubusercontent.com/20238194/47045430-122ae980-d193-11e8-9f0b-897f409f910d.png)
+
+
 * display attachments in customer account bookmark
+
+
+![account-bookmark](https://user-images.githubusercontent.com/20238194/47045641-99785d00-d193-11e8-806d-6df5f9c17537.png)
+
+
+![account-attachments](https://user-images.githubusercontent.com/20238194/47045661-a5fcb580-d193-11e8-9482-a6a6a6b373d6.png)
+
 
 ## For developers
 
