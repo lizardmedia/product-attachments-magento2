@@ -95,3 +95,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## To do
 
 * Introduce EAV pattern for attachment entity to make it vary depending on store view id
+* Add at least unit test
