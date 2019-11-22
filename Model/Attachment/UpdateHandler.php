@@ -11,8 +11,10 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Model\Attachment;
 
-use \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
-use \Magento\Framework\EntityManager\Operation\ExtensionInterface;
+use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 
 /**
  * Class UpdateHandler
@@ -21,13 +23,12 @@ use \Magento\Framework\EntityManager\Operation\ExtensionInterface;
 class UpdateHandler implements ExtensionInterface
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface
+     * @var AttachmentRepositoryInterface
      */
     private $attachmentRepository;
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface $attachmentRepository
+     * @param AttachmentRepositoryInterface $attachmentRepository
      */
     public function __construct(AttachmentRepositoryInterface $attachmentRepository)
     {
@@ -37,13 +38,12 @@ class UpdateHandler implements ExtensionInterface
     /**
      * @param object $entity
      * @param array $arguments
-     *
-     * @return \Magento\Catalog\Api\Data\ProductInterface|object $entity
+     * @return ProductInterface|object $entity
      */
     public function execute($entity, $arguments = [])
     {
         $attachments = $entity->getExtensionAttributes()->getProductAttachments() ?: [];
-        /** @var $attachments \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface[] */
+        /** @var $attachments AttachmentInterface[] */
 
         $updatedAttachments = [];
         $oldAttachments = $this->attachmentRepository->getAttachmentsByProduct($entity);
@@ -55,7 +55,7 @@ class UpdateHandler implements ExtensionInterface
             $this->attachmentRepository->save($entity->getSku(), $attachment, !(bool) $entity->getStoreId());
         }
 
-        /** @var \Magento\Catalog\Api\Data\ProductInterface $entity */
+        /** @var ProductInterface $entity */
         foreach ($oldAttachments as $attachment) {
             if (!isset($updatedAttachments[(int) $attachment->getId()])) {
                 $this->attachmentRepository->delete((int) $attachment->getId());

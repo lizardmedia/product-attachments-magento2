@@ -8,7 +8,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-
 * Magento 2.2
 * PHP 7.1
 
@@ -39,11 +38,6 @@ Download a ZIP version of the module and unpack it into your project into
 ```
 app/code/LizardMedia/ProductAttachment
 ```
-If you use ZIP file you will need to install the dependencies of the module
-manually
-```
-composer require stil/curl-easy:^1.1
-```
 
 #### Install the module
 
@@ -57,7 +51,10 @@ bin/magento setup:upgrade
 
 #### Admin panel
 
-* add and manage attachments to product via adminhtml form
+* add and manage attachments to product via product edit form
+
+![admin-product-form](https://user-images.githubusercontent.com/20238194/47045326-d7c14c80-d192-11e8-91fb-1d8585b1ebe0.png)
+
 
 #### Frontend
 * display attachments on product view page
@@ -79,7 +76,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Bartosz Kubicki** - *Initial work* - [Lizard Media](https://github.com/bartek9007)
+* **Bartosz Kubicki** - *Initial work* - [Lizard Media](https://github.com/bartoszkubicki)
 
 See also the list of [contributors](https://github.com/lizardmedia/product-attachments-magento2/contributors) who participated in this project.
 
@@ -89,4 +86,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## To do
 
-* Introduce EAV pattern for attachment entity to make it vary depending on store view id
+* allow attachment variations depending on store view
+* release new version fully compatible with Magento 2.3+ with tests coverage

@@ -1,12 +1,12 @@
 {
-    "name": "lizardmedia/module-config",
+    "name": "lizardmedia/module-product-attachment",
     "description": "Products attachment by LizardMedia",
     "require": {
         "php": "~7.1.0",
         "magento/module-downloadable": "*"
     },
     "type": "magento2-module",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": [
         "OSL-3.0",
         "AFL-3.0"

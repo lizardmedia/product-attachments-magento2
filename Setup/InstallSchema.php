@@ -6,16 +6,17 @@ declare(strict_types = 1);
  * File: InstallSchema.php
  *
  * @author Bartosz Kubicki bartosz.kubicki@lizardmedia.pl>
- * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ * @copyright Copyright (C) 2019 Lizard Media (http://lizardmedia.pl)
  */
 
 namespace LizardMedia\ProductAttachment\Setup;
 
-use \LizardMedia\ProductAttachment\Model\Attachment;
-use \Magento\Framework\Setup\InstallSchemaInterface;
-use \Magento\Framework\Setup\ModuleContextInterface;
-use \Magento\Framework\Setup\SchemaSetupInterface;
-use \Magento\Framework\DB\Ddl\Table;
+use LizardMedia\ProductAttachment\Model\Attachment;
+use Magento\Framework\Setup\InstallSchemaInterface;
+use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\DB\Ddl\Table;
+use Zend_Db_Exception;
 
 /**
  * Class InstallSchema
@@ -24,10 +25,10 @@ use \Magento\Framework\DB\Ddl\Table;
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @param \Magento\Framework\Setup\SchemaSetupInterface $setup
-     * @param \Magento\Framework\Setup\ModuleContextInterface $context
+     * @param SchemaSetupInterface $setup
+     * @param ModuleContextInterface $context
      *
-     * @throws \Zend_Db_Exception
+     * @throws Zend_Db_Exception
      *
      * @return void
      */
@@ -35,7 +36,7 @@ class InstallSchema implements InstallSchemaInterface
     {
         $setup->startSetup();
 
-        $lizardmedia_product_attachments = $setup->getConnection()->newTable(
+        $productAttachments = $setup->getConnection()->newTable(
             $setup->getTable(Attachment::MAIN_TABLE)
         )->addColumn(
             Attachment::ID,
@@ -75,9 +76,9 @@ class InstallSchema implements InstallSchemaInterface
             'File'
         )->addForeignKey(
             $setup->getFkName(
-                Attachment::MAIN_TABLE,
+                $setup->getTable(Attachment::MAIN_TABLE),
                 Attachment::PRODUCT_ID,
-                'catalog_product_entity',
+                $setup->getTable('catalog_product_entity'),
                 'entity_id'
             ),
             Attachment::PRODUCT_ID,
@@ -88,11 +89,11 @@ class InstallSchema implements InstallSchemaInterface
             'Product attachments'
         );
 
-        $setup->getConnection()->createTable($lizardmedia_product_attachments);
+        $setup->getConnection()->createTable($productAttachments);
 
 
 
-        $lizardmedia_product_attachments_title = $setup->getConnection()->newTable(
+        $productAttachmentsTitle = $setup->getConnection()->newTable(
             $setup->getTable(Attachment::TITLE_TABLE)
         )->addColumn(
             Attachment::TITLE_ID,
@@ -120,20 +121,20 @@ class InstallSchema implements InstallSchemaInterface
             'Title'
         )->addForeignKey(
             $setup->getFkName(
-                Attachment::TITLE_TABLE,
+                $setup->getTable(Attachment::TITLE_TABLE),
                 Attachment::ATTACHMENT_ID,
-                Attachment::MAIN_TABLE,
+                $setup->getTable(Attachment::MAIN_TABLE),
                 Attachment::ID
             ),
             Attachment::ATTACHMENT_ID,
-            Attachment::MAIN_TABLE,
+            $setup->getTable(Attachment::MAIN_TABLE),
             Attachment::ID,
             Table::ACTION_CASCADE
         )->setComment(
             'Product attachments titles'
         );
 
-        $setup->getConnection()->createTable($lizardmedia_product_attachments_title);
+        $setup->getConnection()->createTable($productAttachmentsTitle);
 
         $setup->endSetup();
     }

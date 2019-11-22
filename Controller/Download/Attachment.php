@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * File: Attachment.php
@@ -11,15 +11,17 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Controller\Download;
 
-use \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Controller\DownloadProcessor;
-use \Magento\Downloadable\Helper\Download as DownloadHelper;
-use \Magento\Downloadable\Helper\File as FileHelper;
-use \Magento\Framework\App\Action\Action;
-use \Magento\Framework\App\Action\Context;
-use \Magento\Framework\Controller\ResultInterface;
-use \Magento\Framework\Exception\NoSuchEntityException;
+use Exception;
+use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Controller\DownloadProcessor;
+use Magento\Downloadable\Helper\Download as DownloadHelper;
+use Magento\Downloadable\Helper\File as FileHelper;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class Attachment
@@ -28,28 +30,25 @@ use \Magento\Framework\Exception\NoSuchEntityException;
 class Attachment extends Action
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface
+     * @var AttachmentRepositoryInterface
      */
     private $attachmentRepository;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Controller\DownloadProcessor
+     * @var DownloadProcessor
      */
     private $downloadProcessor;
 
-
     /**
-     * @var \Magento\Downloadable\Helper\File
+     * @var FileHelper
      */
     private $fileHelper;
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface $attachmentRepository
-     * @param \LizardMedia\ProductAttachment\Controller\DownloadProcessor $downloadProcessor
-     * @param \Magento\Downloadable\Helper\File $fileHelper
-     * @param \Magento\Framework\App\Action\Context $context
+     * @param AttachmentRepositoryInterface $attachmentRepository
+     * @param DownloadProcessor $downloadProcessor
+     * @param FileHelper $fileHelper
+     * @param Context $context
      */
     public function __construct(
         AttachmentRepositoryInterface $attachmentRepository,
@@ -63,24 +62,23 @@ class Attachment extends Action
         $this->fileHelper = $fileHelper;
     }
 
-
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface|ResponseInterface
      */
-    public function execute() : ResultInterface
+    public function execute()
     {
-        $attachmentId = (int) $this->getRequest()->getParam('id', 0);
+        $attachmentId = (int)$this->getRequest()->getParam('id', 0);
         $attachment = $this->loadAttachmentById($attachmentId);
 
         if ($attachment instanceof AttachmentInterface) {
             $resource = '';
             $resourceType = '';
 
-            if ($attachment->getAttachmentType() == DownloadHelper::LINK_TYPE_URL) {
+            if ($attachment->getAttachmentType() === DownloadHelper::LINK_TYPE_URL) {
                 $resource = $attachment->getAttachmentUrl();
                 $resourceType = DownloadHelper::LINK_TYPE_URL;
-            } elseif ($attachment->getAttachmentType() == DownloadHelper::LINK_TYPE_FILE) {
-                /** @var \Magento\Downloadable\Helper\File $helper */
+            } elseif ($attachment->getAttachmentType() === DownloadHelper::LINK_TYPE_FILE) {
+                /** @var FileHelper $helper */
                 $resource = $this->fileHelper->getFilePath(
                     $attachment->getBasePath(),
                     $attachment->getAttachmentFile()
@@ -89,7 +87,7 @@ class Attachment extends Action
             }
             try {
                 $this->downloadProcessor->processDownload($this->getResponse(), $resource, $resourceType);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
             }
         }
@@ -97,13 +95,12 @@ class Attachment extends Action
         return $this->getResponse()->setRedirect($this->_redirect->getRedirectUrl());
     }
 
-
     /**
      * @param int $id
      *
-     * @return mixed LizardMedia\ProductAttachment\Api\Data\AttachmentInterface | void
+     * @return AttachmentInterface|null
      */
-    private function loadAttachmentById(int $id) : ?AttachmentInterface
+    private function loadAttachmentById(int $id): ?AttachmentInterface
     {
         try {
             return $this->attachmentRepository->getById($id);
