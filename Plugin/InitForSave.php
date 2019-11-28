@@ -11,11 +11,12 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Plugin;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
-use \LizardMedia\ProductAttachment\Model\Attachment\Builder as AttachmentBuilder;
-use \Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper;
-use \Magento\Catalog\Model\Product;
-use \Magento\Framework\App\RequestInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
+use LizardMedia\ProductAttachment\Model\Attachment\Builder as AttachmentBuilder;
+use Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class InitForSave
@@ -24,27 +25,24 @@ use \Magento\Framework\App\RequestInterface;
 class InitForSave
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface
+     * @var AttachmentFactoryInterface
      */
     private $attachmentFactory;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\Attachment\Builder
+     * @var AttachmentBuilder
      */
     private $attachmentBuilder;
-
 
     /**
      * @var RequestInterface
      */
     private $request;
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface $attachmentFactory
-     * @param \LizardMedia\ProductAttachment\Model\Attachment\Builder $attachmentBuilder
-     * @param \Magento\Framework\App\RequestInterface $request
+     * @param AttachmentFactoryInterface $attachmentFactory
+     * @param AttachmentBuilder $attachmentBuilder
+     * @param RequestInterface $request
      */
     public function __construct(
         AttachmentFactoryInterface $attachmentFactory,
@@ -56,41 +54,47 @@ class InitForSave
         $this->request = $request;
     }
 
-
     /**
-     * @param \Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper $subject
-     * @param \Magento\Catalog\Model\Product $product
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     *
-     * @return \Magento\Catalog\Model\Product
+     * @param Helper $subject
+     * @param Product $product
+     * @return Product
+     * @throws LocalizedException
      */
     public function afterInitialize(Helper $subject, Product $product)
     {
-        if ($downloadable = $this->request->getPost('downloadable')) {
-            if (isset($downloadable['attachment']) && is_array($downloadable['attachment'])) {
-                $product->setDownloadableData($downloadable);
-                $extension = $product->getExtensionAttributes();
+        $downloadable = $this->request->getPost('downloadable');
 
-                $attachments = [];
-                foreach ($downloadable['attachment'] as $attachmentData) {
-                    if (!$attachmentData ||
-                        (isset($attachmentData['is_delete']) && (bool) $attachmentData['is_delete'])) {
-                        continue;
-                    } else {
-                        $attachments[] = $this->attachmentBuilder->setData(
-                            $attachmentData
-                        )->build(
-                            $this->attachmentFactory->create()
-                        );
-                    }
+        if (!empty($downloadable) && (isset($downloadable['attachment']) && is_array($downloadable['attachment']))) {
+            $product->setDownloadableData($downloadable);
+
+            $attachments = [];
+            foreach ($downloadable['attachment'] as $attachmentData) {
+                if (!$attachmentData ||
+                    (isset($attachmentData['is_delete']) && (bool) $attachmentData['is_delete'])) {
+                    continue;
                 }
 
-                $extension->setProductAttachments($attachments);
-                $product->setExtensionAttributes($extension);
+                $attachments[] = $this->attachmentBuilder->setData($attachmentData)
+                    ->build($this->attachmentFactory->create());
             }
+
+            $this->setProductAttachments($product, $attachments);
+        } else {
+            $this->setProductAttachments($product, null);
         }
 
         return $product;
+    }
+
+    /**
+     * @param Product $product
+     * @param array|null $attachments
+     * @return void
+     */
+    private function setProductAttachments(Product $product, ?array $attachments): void
+    {
+        $extension = $product->getExtensionAttributes();
+        $extension->setProductAttachments($attachments);
+        $product->setExtensionAttributes($extension);
     }
 }

@@ -84,15 +84,17 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Bartosz Kubicki** - *Initial work* - [Lizard Media](https://github.com/bartek9007)
+* **Bartosz Kubicki** - *Initial work* - [Lizard Media](https://github.com/bartoszkubicki)
 
 See also the list of [contributors](https://github.com/lizardmedia/product-attachments-magento2/contributors) who participated in this project.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## To do
 
-* Introduce EAV pattern for attachment entity to make it vary depending on store view id
-* Add at least unit test
+* allow attachment variations depending on store view
+* release new version fully compatible with Magento 2.3+ with tests coverage
+* unit tests
+* make general code refactor

@@ -11,28 +11,29 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Model;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface;
-use \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
-use \LizardMedia\ProductAttachment\Model\Attachment\ContentValidator;
-use \LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor;
-use \LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment as AttachmentHandler;
-use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection as AttachmentCollection;
-use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection;
-use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\CollectionFactory as AttachmentCollectionFactory;
-use \Magento\Catalog\Api\Data\ProductInterface;
-use \Magento\Catalog\Api\ProductRepositoryInterface;
-use \Magento\Downloadable\Helper\Download;
-use \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
-use \Magento\Framework\Api\SearchCriteriaInterface;
-use \Magento\Framework\Api\SearchResultsInterface;
-use \Magento\Framework\Api\SearchResultsInterfaceFactory;
-use \Magento\Framework\EntityManager\MetadataPool;
-use \Magento\Framework\Exception\InputException;
-use \Magento\Framework\Exception\NoSuchEntityException;
-use \Magento\Framework\Exception\StateException;
-use \Magento\Framework\Serialize\Serializer\Json as JsonSeliarizer;
+use Exception;
+use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface;
+use LizardMedia\ProductAttachment\Model\Attachment\ContentValidator;
+use LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor;
+use LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment as AttachmentHandler;
+use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection;
+use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection as AttachmentCollection;
+use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\CollectionFactory as AttachmentCollectionFactory;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Downloadable\Helper\Download;
+use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
+use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Api\SearchResultsInterface;
+use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\StateException;
+use Magento\Framework\Serialize\Serializer\Json as JsonSeliarizer;
 
 /**
  * Class AttachmentRepository
@@ -41,83 +42,78 @@ use \Magento\Framework\Serialize\Serializer\Json as JsonSeliarizer;
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface
+     * @var AttachmentFactoryInterface
      */
     private $attachmentFactory;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface
+     * @var ContentUploaderInterface
      */
     private $fileContentUploader;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\Attachment\ContentValidator
+     * @var ContentValidator
      */
     private $contentValidator;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor
+     * @var SearchResultProcessor
      */
     private $searchResultProcessor;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment
+     * @var AttachmentHandler
      */
     private $attachmentTypeHandler;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\CollectionFactory
+     * @var AttachmentCollectionFactory
      */
     private $attachmentCollectionFactory;
 
 
     /**
-     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     * @var ProductRepositoryInterface
      */
     private $productRepository;
 
 
     /**
-     * @var \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface
+     * @var JoinProcessorInterface
      */
     private $extensionAttributesJoinProcessor;
 
 
     /**
-     * @var \Magento\Framework\Api\SearchResultsInterfaceFactory
+     * @var SearchResultsInterfaceFactory
      */
     private $searchResultFactory;
 
 
     /**
-     * @var \Magento\Framework\EntityManager\MetadataPool
+     * @var MetadataPool
      */
     private $metadataPool;
 
 
     /**
-     * @var \Magento\Framework\Serialize\Serializer\Json
+     * @var JsonSeliarizer
      */
     private $jsonSeliarizer;
 
 
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface $attachmentFactory
-     * @param \LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface $fileContentUploader
-     * @param \LizardMedia\ProductAttachment\Model\Attachment\ContentValidator $contentValidator
-     * @param \LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor $searchResultProcessor
-     * @param \LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment $attachmentTypeHandler
-     * @param \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\CollectionFactory $attachmentCollectionFactory
-     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
-     * @param \Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface $extensionAttributesJoinProcessor
-     * @param \Magento\Framework\Api\SearchResultsInterfaceFactory $searchResultsFactory
-     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
-     * @param \Magento\Framework\Serialize\Serializer\Json $jsonSeliarizer
+     * @param AttachmentFactoryInterface $attachmentFactory
+     * @param ContentUploaderInterface $fileContentUploader
+     * @param ContentValidator $contentValidator
+     * @param SearchResultProcessor $searchResultProcessor
+     * @param AttachmentHandler $attachmentTypeHandler
+     * @param AttachmentCollectionFactory $attachmentCollectionFactory
+     * @param ProductRepositoryInterface $productRepository
+     * @param JoinProcessorInterface $extensionAttributesJoinProcessor
+     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param MetadataPool $metadataPool
+     * @param JsonSeliarizer $jsonSeliarizer
      */
     public function __construct(
         AttachmentFactoryInterface $attachmentFactory,
@@ -148,10 +144,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
     /**
      * @param int $id
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
+     * @throws NoSuchEntityException
      */
     public function getById($id) : AttachmentInterface
     {
@@ -165,15 +159,15 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+     * @param SearchCriteriaInterface $searchCriteria
      * @param int $storeId
      *
-     * @return \Magento\Framework\Api\SearchResultsInterface
+     * @return SearchResultsInterface
      */
     public function getList(SearchCriteriaInterface $searchCriteria, int $storeId = 0) : SearchResultsInterface
     {
         $collection = $this->attachmentCollectionFactory->create();
-        /** @var $collection \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection */
+        /** @var $collection AttachmentCollection */
 
         $this->searchResultProcessor->addFiltersToCollection($searchCriteria, $collection);
         $this->searchResultProcessor->addSortOrdersToCollection($searchCriteria, $collection);
@@ -195,16 +189,16 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @param \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection $collection
+     * @param SearchCriteriaInterface $searchCriteria
+     * @param AttachmentCollection $collection
      *
-     * @return \Magento\Framework\Api\SearchResultsInterface $searchResults
+     * @return SearchResultsInterface $searchResults
      */
     private function buildSearchResult(SearchCriteriaInterface $searchCriteria, AttachmentCollection $collection)
     {
         $searchResults = $this->searchResultFactory->create();
 
-        /** @var $searchResults \Magento\Framework\Api\SearchResultsInterface */
+        /** @var $searchResults SearchResultsInterface */
 
         $searchResults->setSearchCriteria($searchCriteria);
         $searchResults->setItems($collection->getItems());
@@ -215,11 +209,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @param ProductInterface $product
+     * @return AttachmentInterface[]
+     * @throws Exception
      *
-     * @throws \Exception
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface[]
      */
     public function getAttachmentsByProduct(ProductInterface $product) : array
     {
@@ -233,13 +226,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return $attachmentList;
     }
 
-
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     *
-     * @throws \Exception
-     *
-     * @return \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection
+     * @param ProductInterface $product
+     * @return AttachmentCollection
+     * @throws Exception
      */
     private function getAttachments(ProductInterface $product) : ?Collection
     {
@@ -259,9 +249,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     /**
      * Attachment is build using data from different tables.
      *
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $resourceData
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @param AttachmentInterface $resourceData
+     * @return AttachmentInterface
      */
     protected function buildAttachment($resourceData) : AttachmentInterface
     {
@@ -272,9 +261,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $resourceData
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $dataObject
-     *
+     * @param AttachmentInterface $resourceData
+     * @param AttachmentInterface $dataObject
      * @return void
      */
     protected function setBasicFields(AttachmentInterface $resourceData, AttachmentInterface $dataObject) : void
@@ -306,14 +294,13 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
     /**
      * @param string $sku
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
+     * @param AttachmentInterface $attachment
      * @param bool $isGlobalScopeContent
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Exception
-     *
      * @return int
+     * @throws InputException
+     * @throws Exception
+     *
+     * @throws NoSuchEntityException
      */
     public function save(string $sku, AttachmentInterface $attachment, bool $isGlobalScopeContent = true) : int
     {
@@ -351,10 +338,9 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
+     * @param ProductInterface $product
+     * @param AttachmentInterface $attachment
      * @param bool $isGlobalScopeContent
-     *
      * @return int
      */
     protected function saveAttachment(
@@ -402,25 +388,23 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @param \Magento\Catalog\Api\Data\ProductInterface $product
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
+     * @param ProductInterface $product
+     * @param AttachmentInterface $attachment
      * @param bool $isGlobalScopeContent
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Exception
-     *
      * @return int
+     * @throws InputException
+     * @throws Exception
+     * @throws NoSuchEntityException
      */
     protected function updateAttachment(
         ProductInterface $product,
         AttachmentInterface $attachment,
         bool $isGlobalScopeContent
-    ) : int {
+    ): int {
         $id = (int) $attachment->getId();
 
         $existingAttachment = $this->attachmentFactory->create()->load($id);
-        /** @var $existingAttachment \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface */
+        /** @var $existingAttachment AttachmentInterface */
 
         if (!$existingAttachment->getId()) {
             throw new NoSuchEntityException(__('There is no attachment with provided ID.'));
@@ -463,21 +447,18 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
         $this->saveAttachment($product, $attachment, $isGlobalScopeContent);
 
-        return $existingAttachment->getId();
+        return (int) $existingAttachment->getId();
     }
-
 
     /**
      * @param int $id
-     *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\StateException
-     *
      * @return bool
+     * @throws StateException
+     * @throws NoSuchEntityException
      */
     public function delete(int $id) : bool
     {
-        /** @var $attachment \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface */
+        /** @var $attachment AttachmentInterface */
         $attachment = $this->attachmentFactory->create()->load($id);
 
         if (!(int) $attachment->getId()) {
@@ -486,7 +467,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
         try {
             $attachment->delete();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new StateException(__('Cannot delete attachment with id "%1"', $attachment->getId()), $exception);
         }
 
