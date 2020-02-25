@@ -8,3 +8,9 @@
 
 ### 1.2.0 ###
 * tested module on php 7.3 + support for php 7.3 + tested on Magento 2.3.4
+
+### 1.2.1 ###
+* added dutch translation
+
+### 1.2.2 ###
+* fixed type error in attachment download controller
