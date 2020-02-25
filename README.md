@@ -80,7 +80,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/lizardmedia/varnish-warmer-magento2/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/lizardmedia/product-attachments-magento2/tags).
 
 ## Authors
 
@@ -95,6 +95,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## To do
 
 * allow attachment variations depending on store view
-* release new version fully compatible with Magento 2.3+ with tests coverage
+* add tests coverage
 * unit tests
 * make general code refactor

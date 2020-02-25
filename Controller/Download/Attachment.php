@@ -67,7 +67,7 @@ class Attachment extends Action
      */
     public function execute()
     {
-        $attachmentId = (int)$this->getRequest()->getParam('id', 0);
+        $attachmentId = (int) $this->getRequest()->getParam('id', 0);
         $attachment = $this->loadAttachmentById($attachmentId);
 
         if ($attachment instanceof AttachmentInterface) {
@@ -106,6 +106,7 @@ class Attachment extends Action
             return $this->attachmentRepository->getById($id);
         } catch (NoSuchEntityException $e) {
             $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
+            return null;
         }
     }
 }
