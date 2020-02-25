@@ -14,8 +14,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* Magento 2.2+
-* PHP 7.1/7.2
+* Magento 2.2+ / Magento 2.3+ 
+* PHP 7.1 / 7.2 / 7.3
 
 ### Installing
 
