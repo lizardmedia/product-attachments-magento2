@@ -11,15 +11,15 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Data;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
-use \LizardMedia\ProductAttachment\Api\SettingsInterface;
-use \LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
-use \Magento\Catalog\Model\Locator\LocatorInterface;
-use \Magento\Downloadable\Helper\File as DownloadableFile;
-use \Magento\Framework\Escaper;
-use \Magento\Framework\UrlInterface;
-use \Magento\Store\Model\ScopeInterface;
+use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Api\SettingsInterface;
+use LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
+use Magento\Catalog\Model\Locator\LocatorInterface;
+use Magento\Downloadable\Helper\File as DownloadableFile;
+use Magento\Framework\Escaper;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Attachments
@@ -28,55 +28,48 @@ use \Magento\Store\Model\ScopeInterface;
 class Attachments
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface
+     * @var AttachmentRepositoryInterface
      */
     private $attachmentRepository;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Api\SettingsInterface
+     * @var SettingsInterface
      */
     private $settings;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\Attachment
+     * @var AttachmentModel
      */
     private $attachmentModel;
 
-
     /**
-     * @var \Magento\Catalog\Model\Locator\LocatorInterface
+     * @var LocatorInterface
      */
     private $locator;
 
-
     /**
-     * @var \Magento\Downloadable\Helper\File
+     * @var DownloadableFile
      */
     private $downloadableFile;
 
-
     /**
-     * @var \Magento\Framework\Escaper
+     * @var Escaper
      */
     private $escaper;
 
-
     /**
-     * @var \Magento\Framework\UrlInterface
+     * @var UrlInterface
      */
     private $urlBuilder;
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface $attachmentRepository
-     * @param \LizardMedia\ProductAttachment\Api\SettingsInterface $settings
-     * @param \LizardMedia\ProductAttachment\Model\Attachment $attachmentModel
-     * @param \Magento\Catalog\Model\Locator\LocatorInterface $locator
-     * @param \Magento\Downloadable\Helper\File $downloadableFile
-     * @param \Magento\Framework\Escaper $escaper
-     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param AttachmentRepositoryInterface $attachmentRepository
+     * @param SettingsInterface $settings
+     * @param AttachmentModel $attachmentModel
+     * @param LocatorInterface $locator
+     * @param DownloadableFile $downloadableFile
+     * @param Escaper $escaper
+     * @param UrlInterface $urlBuilder
      */
     public function __construct(
         AttachmentRepositoryInterface $attachmentRepository,
@@ -96,7 +89,6 @@ class Attachments
         $this->urlBuilder = $urlBuilder;
     }
 
-
     /**
      * @return string
      */
@@ -107,7 +99,6 @@ class Attachments
             ? $product->getAttachmentsTitle()
             : $this->settings->getAttachmentDefaultTitle(ScopeInterface::SCOPE_STORE);
     }
-
 
     /**
      * @return array
@@ -138,11 +129,9 @@ class Attachments
         return $attachmentsData;
     }
 
-
     /**
      * @param array $attachmentData
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
-     *
+     * @param AttachmentInterface $attachment
      * @return array
      */
     private function addAttachmentFile(array $attachmentData, AttachmentInterface $attachment) : array

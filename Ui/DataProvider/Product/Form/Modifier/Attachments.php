@@ -12,16 +12,16 @@ declare(strict_types = 1);
 namespace LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier;
 
 use LizardMedia\ProductAttachment\Model\Attachment;
-use \LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Data\Attachments as AttachmentsData;
-use \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
-use \Magento\Catalog\Model\Locator\LocatorInterface;
-use \Magento\Downloadable\Model\Source\TypeUpload;
-use \Magento\Framework\Stdlib\ArrayManager;
-use \Magento\Framework\UrlInterface;
-use \Magento\Store\Model\StoreManagerInterface;
-use \Magento\Ui\Component\Container;
-use \Magento\Ui\Component\DynamicRows;
-use \Magento\Ui\Component\Form;
+use LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Data\Attachments as AttachmentsData;
+use Magento\Catalog\Model\Locator\LocatorInterface;
+use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
+use Magento\Downloadable\Model\Source\TypeUpload;
+use Magento\Framework\Stdlib\ArrayManager;
+use Magento\Framework\UrlInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Ui\Component\Container;
+use Magento\Ui\Component\DynamicRows;
+use Magento\Ui\Component\Form;
 
 /**
  * Class Attachments
@@ -30,48 +30,42 @@ use \Magento\Ui\Component\Form;
 class Attachments extends AbstractModifier
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Data\Attachments
+     * @var AttachmentsData
      */
     private $attachmentsData;
 
-
     /**
-     * @var \Magento\Catalog\Model\Locator\LocatorInterface
+     * @var LocatorInterface
      */
     private $locator;
 
-
     /**
-     * @var \Magento\Downloadable\Model\Source\TypeUpload
+     * @var TypeUpload
      */
     private $typeUpload;
 
-
     /**
-     * @var \Magento\Framework\Stdlib\ArrayManager
+     * @var ArrayManager
      */
     private $arrayManager;
 
-
     /**
-     * @var \Magento\Framework\UrlInterface
+     * @var UrlInterface
      */
     private $urlBuilder;
 
-
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     private $storeManager;
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier\Data\Attachments $attachmentsData
-     * @param \Magento\Catalog\Model\Locator\LocatorInterface $locator
-     * @param \Magento\Downloadable\Model\Source\TypeUpload $typeUpload
-     * @param \Magento\Framework\Stdlib\ArrayManager $arrayManager
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param AttachmentsData $attachmentsData
+     * @param LocatorInterface $locator
+     * @param TypeUpload $typeUpload
+     * @param ArrayManager $arrayManager
+     * @param UrlInterface $urlBuilder
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         AttachmentsData $attachmentsData,
@@ -89,10 +83,8 @@ class Attachments extends AbstractModifier
         $this->storeManager = $storeManager;
     }
 
-
     /**
      * @param array $data
-     *
      * @return array $data
      */
     public function modifyData(array $data) : array
@@ -105,10 +97,8 @@ class Attachments extends AbstractModifier
         return $data;
     }
 
-
     /**
      * @param array $meta
-     *
      * @return array $meta
      */
     public function modifyMeta(array $meta) : array
@@ -151,7 +141,6 @@ class Attachments extends AbstractModifier
 
         return $this->arrayManager->set($attachmentsPath, $meta, $attachmentsContainer);
     }
-
 
     /**
      * @return array
@@ -213,7 +202,6 @@ class Attachments extends AbstractModifier
         );
     }
 
-
     /**
      * @return array
      */
@@ -239,7 +227,6 @@ class Attachments extends AbstractModifier
 
         return $this->arrayManager->set('children/attachment_title', $titleContainer, $titleField);
     }
-
 
     /**
      * @return array
@@ -280,7 +267,7 @@ class Attachments extends AbstractModifier
         $attachmentUploader['arguments']['data']['config'] = [
             'formElement' => 'fileUploader',
             'componentType' => 'fileUploader',
-            'component' => 'Magento_Downloadable/js/components/file-uploader',
+            'component' => 'LizardMedia_ProductAttachment/js/components/file-uploader',
             'elementTmpl' => 'Magento_Downloadable/components/file-uploader',
             'fileInputName' => 'attachments',
             'uploaderConfig' => [

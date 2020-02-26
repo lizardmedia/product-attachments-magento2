@@ -14,3 +14,7 @@
 
 ### 1.2.2 ###
 * fixed type error in attachment download controller
+
+### 1.2.3 ###
+* fixed conflict of file processing when downloadable product is going to have attachments
+* added more verbosity to file uploader in adminhtml

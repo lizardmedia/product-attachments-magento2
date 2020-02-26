@@ -11,13 +11,13 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier;
 
-use \Magento\Catalog\Model\Locator\LocatorInterface;
-use \Magento\Catalog\Model\Product\Type as CatalogType;
-use \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
-use \Magento\ConfigurableProduct\Model\Product\Type\Configurable as ConfigurableType;
-use \Magento\Downloadable\Model\Product\Type as DownloadableType;
-use \Magento\GroupedProduct\Model\Product\Type\Grouped as GroupedType;
-use \Magento\Ui\DataProvider\Modifier\ModifierFactory;
+use Magento\Catalog\Model\Locator\LocatorInterface;
+use Magento\Catalog\Model\Product\Type as CatalogType;
+use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
+use Magento\Downloadable\Model\Product\Type as DownloadableType;
+use Magento\Ui\DataProvider\Modifier\ModifierFactory;
+use Magento\Ui\DataProvider\Modifier\ModifierInterface;
+use function in_array;
 
 /**
  * Class Composite
@@ -33,34 +33,32 @@ class Composite extends AbstractModifier
     const CHILDREN_PATH = 'product_attachment/children';
     const CONTAINER_ATTACHMENTS = 'container_attachments';
 
+    const CONFIGURABLE_TYPE_CODE = 'configurable';
+    const GROUPED_TYPE_CODE = 'grouped';
 
     /**
      * @var array
      */
-    private $modifiers = [];
-
+    private $modifiers;
 
     /**
-     * @var \Magento\Catalog\Model\Locator\LocatorInterface
+     * @var LocatorInterface
      */
     private $locator;
 
-
     /**
-     * @var \Magento\Ui\DataProvider\Modifier\ModifierFactory
+     * @var ModifierFactory
      */
     private $modifierFactory;
 
-
     /**
-     * @var \Magento\Ui\DataProvider\Modifier\ModifierInterface[]
+     * @var ModifierInterface[]
      */
     private $modifiersInstances = [];
 
-
     /**
-     * @param \Magento\Catalog\Model\Locator\LocatorInterface $locator
-     * @param \Magento\Ui\DataProvider\Modifier\ModifierFactory $modifierFactory
+     * @param LocatorInterface $locator
+     * @param ModifierFactory $modifierFactory
      * @param array $modifiers
      */
     public function __construct(
@@ -73,10 +71,8 @@ class Composite extends AbstractModifier
         $this->modifiers = $modifiers;
     }
 
-
     /**
      * @param array $data
-     *
      * @return array $data
      */
     public function modifyData(array $data) : array
@@ -93,7 +89,6 @@ class Composite extends AbstractModifier
 
     /**
      * @param array $meta
-     *
      * @return array $meta
      */
     public function modifyMeta(array $meta) : array
@@ -109,9 +104,7 @@ class Composite extends AbstractModifier
 
 
     /**
-     * Get modifiers list
-     *
-     * @return \Magento\Ui\DataProvider\Modifier\ModifierInterface[]
+     * @return ModifierInterface[]
      */
     private function getModifiers() : array
     {
@@ -124,7 +117,6 @@ class Composite extends AbstractModifier
         return $this->modifiersInstances;
     }
 
-
     /**
      * @return bool
      */
@@ -134,11 +126,11 @@ class Composite extends AbstractModifier
             CatalogType::TYPE_SIMPLE,
             CatalogType::TYPE_VIRTUAL,
             CatalogType::TYPE_BUNDLE,
-            ConfigurableType::TYPE_CODE,
+            self::CONFIGURABLE_TYPE_CODE,
             DownloadableType::TYPE_DOWNLOADABLE,
-            GroupedType::TYPE_CODE
+            self::GROUPED_TYPE_CODE
         ];
 
-        return in_array($this->locator->getProduct()->getTypeId(), $productTypes);
+        return in_array((string) $this->locator->getProduct()->getTypeId(), $productTypes, true);
     }
 }
