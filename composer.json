@@ -3,10 +3,13 @@
     "description": "Products attachment by LizardMedia",
     "require": {
         "php": "~7.1.0|~7.2.0|~7.3.0",
-        "magento/module-downloadable": "*"
+        "magento/module-catalog": "*",
+        "magento/module-downloadable": "*",
+        "magento/module-store": "*",
+        "magento/module-ui": "*"
     },
     "type": "magento2-module",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "license": [
         "MIT"
     ],

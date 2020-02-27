@@ -34,7 +34,8 @@
 
     <!-- Plugin section -->
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
-        <plugin name="Downloadable" type="LizardMedia\ProductAttachment\Plugin\InitForSave" sortOrder="70" />
+        <plugin name="LizardMedia_ProductAttachment::initAttachmentsDataForProduct"
+                type="LizardMedia\ProductAttachment\Plugin\InitForSave" sortOrder="70" />
     </type>
     <!-- End of plugin section -->
 

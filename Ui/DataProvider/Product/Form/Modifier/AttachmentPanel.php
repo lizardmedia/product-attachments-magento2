@@ -11,10 +11,9 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Ui\DataProvider\Product\Form\Modifier;
 
-use \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
-use \Magento\Catalog\Model\Locator\LocatorInterface;
-use \Magento\Framework\Stdlib\ArrayManager;
-use \Magento\Ui\Component\Form;
+use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
+use Magento\Framework\Stdlib\ArrayManager;
+use Magento\Ui\Component\Form;
 
 /**
  * Class AttachmentPanel
@@ -23,37 +22,25 @@ use \Magento\Ui\Component\Form;
 class AttachmentPanel extends AbstractModifier
 {
     /**
-     * @var \Magento\Catalog\Model\Locator\LocatorInterface
-     */
-    private $locator;
-
-
-    /**
-     * @var \Magento\Framework\Stdlib\ArrayManager
+     * @var ArrayManager
      */
     private $arrayManager;
-
 
     /**
      * @var array
      */
     private $meta = [];
 
-
     /**
-     * @param \Magento\Catalog\Model\Locator\LocatorInterface $locator
-     * @param \Magento\Framework\Stdlib\ArrayManager $arrayManager
+     * @param ArrayManager $arrayManager
      */
-    public function __construct(LocatorInterface $locator, ArrayManager $arrayManager)
+    public function __construct(ArrayManager $arrayManager)
     {
-        $this->locator = $locator;
         $this->arrayManager = $arrayManager;
     }
 
-
     /**
      * @param array $data
-     *
      * @return array $data
      */
     public function modifyData(array $data) : array
@@ -61,10 +48,8 @@ class AttachmentPanel extends AbstractModifier
         return $data;
     }
 
-
     /**
      * @param array $meta
-     *
      * @return array $meta
      */
     public function modifyMeta(array $meta) : array
