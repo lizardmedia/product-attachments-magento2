@@ -11,16 +11,15 @@ declare(strict_types=1);
 
 namespace LizardMedia\ProductAttachment\Controller\Download;
 
-use Exception;
 use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
 use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
 use LizardMedia\ProductAttachment\Controller\DownloadProcessor;
-use Magento\Downloadable\Helper\Download as DownloadHelper;
-use Magento\Downloadable\Helper\File as FileHelper;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\RawFactory;
+use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
@@ -40,64 +39,42 @@ class Attachment extends Action
     private $downloadProcessor;
 
     /**
-     * @var FileHelper
-     */
-    private $fileHelper;
-
-    /**
+     * Attachment constructor.
      * @param AttachmentRepositoryInterface $attachmentRepository
      * @param DownloadProcessor $downloadProcessor
-     * @param FileHelper $fileHelper
      * @param Context $context
      */
     public function __construct(
         AttachmentRepositoryInterface $attachmentRepository,
         DownloadProcessor $downloadProcessor,
-        FileHelper $fileHelper,
         Context $context
     ) {
         parent::__construct($context);
         $this->attachmentRepository = $attachmentRepository;
         $this->downloadProcessor = $downloadProcessor;
-        $this->fileHelper = $fileHelper;
     }
 
     /**
-     * @return ResultInterface|ResponseInterface
+     * @return ResultInterface
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
         $attachmentId = (int) $this->getRequest()->getParam('id', 0);
         $attachment = $this->loadAttachmentById($attachmentId);
 
         if ($attachment instanceof AttachmentInterface) {
-            $resource = '';
-            $resourceType = '';
-
-            if ($attachment->getAttachmentType() === DownloadHelper::LINK_TYPE_URL) {
-                $resource = $attachment->getAttachmentUrl();
-                $resourceType = DownloadHelper::LINK_TYPE_URL;
-            } elseif ($attachment->getAttachmentType() === DownloadHelper::LINK_TYPE_FILE) {
-                /** @var FileHelper $helper */
-                $resource = $this->fileHelper->getFilePath(
-                    $attachment->getBasePath(),
-                    $attachment->getAttachmentFile()
-                );
-                $resourceType = DownloadHelper::LINK_TYPE_FILE;
-            }
             try {
-                $this->downloadProcessor->processDownload($this->getResponse(), $resource, $resourceType);
-            } catch (Exception $e) {
+                return $this->downloadProcessor->processDownload($attachment);
+            } catch (FileSystemException $exception) {
                 $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
             }
         }
 
-        return $this->getResponse()->setRedirect($this->_redirect->getRedirectUrl());
+        return $this->goBack();
     }
 
     /**
      * @param int $id
-     *
      * @return AttachmentInterface|null
      */
     private function loadAttachmentById(int $id): ?AttachmentInterface
@@ -108,5 +85,13 @@ class Attachment extends Action
             $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
             return null;
         }
+    }
+
+    /**
+     * @return Redirect
+     */
+    private function goBack(): Redirect
+    {
+        return $this->resultRedirectFactory->create()->setRefererUrl();
     }
 }

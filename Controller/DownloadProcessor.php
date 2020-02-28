@@ -1,20 +1,23 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * File: DownloadProcessor.php
  *
  * @author Bartosz Kubicki bartosz.kubicki@lizardmedia.pl>
- * @copyright Copyright (C) 2018 Lizard Media (http://lizardmedia.pl)
+ * @copyright Copyright (C) 2020 Lizard Media (http://lizardmedia.pl)
  */
 
 namespace LizardMedia\ProductAttachment\Controller;
 
-use \LizardMedia\ProductAttachment\Api\SettingsInterface;
-use \Magento\Downloadable\Helper\Download as DownloadHelper;
-use \Magento\Downloadable\Helper\File as FileHelper;
-use \Magento\Framework\App\ResponseInterface;
+use Exception;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use Magento\Framework\App\Response\Http\FileFactory;
+use Magento\Framework\Controller\Result\Raw;
+use Magento\Framework\Controller\Result\RawFactory;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Filesystem\Io\File;
 
 /**
  * Class DownloadProcessor
@@ -23,80 +26,76 @@ use \Magento\Framework\App\ResponseInterface;
 class DownloadProcessor
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Api\SettingsInterface
+     * @var DownloadResourceResolver
      */
-    private $settings;
-
+    private $downloadResourceResolver;
 
     /**
-     * @var \Magento\Downloadable\Helper\Download
+     * @var FileFactory
      */
-    private $downloadHelper;
-
+    private $fileFactory;
 
     /**
-     * @var \Magento\Downloadable\Helper\File
+     * @var RawFactory
      */
-    private $fileHelper;
-
+    private $rawFactory;
 
     /**
-     * @param \LizardMedia\ProductAttachment\Api\SettingsInterface $settings
-     * @param \Magento\Downloadable\Helper\Download $downloadHelper
-     * @param \Magento\Downloadable\Helper\File $fileHelper
+     * @var File
+     */
+    private $file;
+
+    /**
+     * DownloadProcessor constructor.
+     * @param DownloadResourceResolver $downloadResourceResolver
+     * @param FileFactory $fileFactory
+     * @param RawFactory $rawFactory
+     * @param File $file
      */
     public function __construct(
-        SettingsInterface $settings,
-        DownloadHelper $downloadHelper,
-        FileHelper $fileHelper
+        DownloadResourceResolver $downloadResourceResolver,
+        FileFactory $fileFactory,
+        RawFactory $rawFactory,
+        File $file
     ) {
-        $this->settings = $settings;
-        $this->downloadHelper = $downloadHelper;
-        $this->fileHelper = $fileHelper;
+        $this->downloadResourceResolver = $downloadResourceResolver;
+        $this->fileFactory = $fileFactory;
+        $this->rawFactory = $rawFactory;
+        $this->file = $file;
     }
 
+    /**
+     * @param AttachmentInterface $attachment
+     * @return Raw
+     * @throws FileSystemException
+     */
+    public function processDownload(AttachmentInterface $attachment): Raw
+    {
+        /** @var $raw Raw */
+        try {
+            $raw = $this->rawFactory->create();
+            $response = $this->fileFactory->create(
+                basename($this->downloadResourceResolver->resolveResource($attachment)),
+                $this->readFile($attachment)
+            );
+            return $raw->renderResult($response);
+        } catch (Exception $exception) {
+            throw new FileSystemException(__('File could not be downloaded'));
+        }
+    }
 
     /**
-     * @param \Magento\Framework\App\ResponseInterface $response
-     * @param string $resource
-     * @param string $resourceType
-     *
-     * @return void
+     * @param AttachmentInterface $attachment
+     * @return string
+     * @throws FileSystemException
      */
-    public function processDownload(ResponseInterface $response, string $resource, string $resourceType)
+    private function readFile(AttachmentInterface $attachment): string
     {
-        $this->downloadHelper->setResource($resource, $resourceType);
-
-        $fileName = $this->downloadHelper->getFilename();
-        $contentType = $this->downloadHelper->getContentType();
-
-        $response->setHttpResponseCode(
-            200
-        )->setHeader(
-            'Pragma',
-            'public',
-            true
-        )->setHeader(
-            'Cache-Control',
-            'must-revalidate, post-check=0, pre-check=0',
-            true
-        )->setHeader(
-            'Content-type',
-            $contentType,
-            true
-        );
-
-        if ($fileSize = $this->downloadHelper->getFileSize()) {
-            $response->setHeader('Content-Length', $fileSize);
+        $fileContent = $this->file->read($this->downloadResourceResolver->resolveResource($attachment));
+        if ($fileContent === false ) {
+            throw new FileSystemException(__('File could not be read'));
         }
 
-        if ($contentDisposition = $this->settings->getContentDisposition()) {
-            $response
-                ->setHeader('Content-Disposition', $contentDisposition . '; filename=' . $fileName);
-        }
-
-        $response->clearBody();
-        $response->sendHeaders();
-        $this->downloadHelper->output();
+        return $fileContent;
     }
 }

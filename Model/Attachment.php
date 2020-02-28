@@ -11,13 +11,14 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Model;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentExtensionInterface;
-use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment as AttachmentResource;
-use \Magento\Downloadable\Api\Data\File\ContentInterface;
-use \Magento\Downloadable\Model\ComponentInterface;
-use \Magento\Framework\DataObject\IdentityInterface;
-use \Magento\Framework\Model\AbstractExtensibleModel;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentExtensionInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment as AttachmentResource;
+use Magento\Downloadable\Api\Data\File\ContentInterface;
+use Magento\Downloadable\Model\ComponentInterface;
+use Magento\Framework\DataObject\IdentityInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Model\AbstractExtensibleModel;
 
 /**
  * Class Attachment
@@ -30,7 +31,6 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
      */
     const CACHE_TAG = 'lizardmedia_productattachment_attachment';
 
-
     /**
      * Tables
      *
@@ -38,7 +38,6 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
      */
     const MAIN_TABLE = 'lizardmedia_product_attachment';
     const TITLE_TABLE = 'lizardmedia_product_attachment_title';
-
 
     /**
      * Main model field names
@@ -64,7 +63,6 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
     const TITLE = 'title';
     const STORE_ID = 'store_id';
 
-
     /**
      * @return void
      */
@@ -74,15 +72,13 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
         parent::_construct();
     }
 
-
     /**
      * @return array
      */
-    public function getIdentities()
+    public function getIdentities(): array
     {
         return [self::CACHE_TAG . '_' . $this->getId()];
     }
-
 
     /**
      * @return $this
@@ -92,7 +88,6 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
         $this->getResource()->saveItemTitle($this);
         return parent::afterSave();
     }
-
 
     /**
      * @return string
@@ -106,38 +101,32 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
         }
     }
 
-
     /**
      * @return string
      */
-    public function getBaseTmpPath()
+    public function getBaseTmpPath(): string
     {
         return 'downloadable/tmp/attachment';
     }
 
-
     /**
      * @return string
      */
-    public function getBasePath()
+    public function getBasePath(): string
     {
         return 'downloadable/files/attachment';
     }
 
-
     /**
      * @param int $productId
      * @param int $storeId
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     *
      * @return array
+     * @throws LocalizedException
      */
     public function getSearchableData($productId, $storeId)
     {
         return $this->_getResource()->getSearchableData($productId, $storeId);
     }
-
 
     /**
      * @return int
@@ -147,37 +136,31 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
         return (int) $this->getData(self::PRODUCT_ID);
     }
 
-
     /**
      * @param int $id
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
      */
     public function setProductId(int $id) : AttachmentInterface
     {
         return $this->setData(self::PRODUCT_ID, $id);
     }
 
-
     /**
      * @return string
      */
     public function getTitle() : string
     {
-        return $this->getData(self::TITLE);
+        return (string) $this->getData(self::TITLE);
     }
-
 
     /**
      * @param string $title
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
      */
     public function setTitle(string $title) : AttachmentInterface
     {
         return $this->setData(self::TITLE, $title);
     }
-
 
     /**
      * @return int
@@ -187,41 +170,34 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
         return (int) $this->getData(self::SORT_ORDER);
     }
 
-
     /**
      * @param int $sortOrder
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
      */
     public function setSortOrder(int $sortOrder) : AttachmentInterface
     {
         return $this->setData(self::SORT_ORDER, $sortOrder);
     }
 
-
     /**
      * @return string
      */
     public function getAttachmentType() : string
     {
-        return $this->getData(self::ATTACHMENT_TYPE);
+        return (string) $this->getData(self::ATTACHMENT_TYPE);
     }
-
 
     /**
      * @param string $attachmentType
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
      */
     public function setAttachmentType(string $attachmentType) : AttachmentInterface
     {
         return $this->setData(self::ATTACHMENT_TYPE, $attachmentType);
     }
 
-
     /**
      * Relative file path
-     *
      * @return string|null
      */
     public function getAttachmentFile() : ?string
@@ -229,37 +205,31 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
         return $this->getData(self::ATTACHMENT_FILE);
     }
 
-
     /**
      * @param string $attachmentFile
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
      */
     public function setAttachmentFile(string $attachmentFile) : AttachmentInterface
     {
         return $this->setData(self::ATTACHMENT_FILE, $attachmentFile);
     }
 
-
     /**
-     * @return \Magento\Downloadable\Api\Data\File\ContentInterface|null
+     * @return ContentInterface|null
      */
     public function getAttachmentFileContent() : ?ContentInterface
     {
         return $this->getData(self::ATTACHMENT_FILE_CONTENT);
     }
 
-
     /**
-     * @param \Magento\Downloadable\Api\Data\File\ContentInterface $attachmentFileContent
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @param ContentInterface $attachmentFileContent
+     * @return AttachmentInterface
      */
     public function setAttachmentFileContent(ContentInterface $attachmentFileContent = null) : AttachmentInterface
     {
         return $this->setData(self::ATTACHMENT_FILE_CONTENT, $attachmentFileContent);
     }
-
 
     /**
      * @return string|null
@@ -269,20 +239,17 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
         return $this->getData(self::ATTACHMENT_URL);
     }
 
-
     /**
      * @param string $attachmentUrl
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
      */
     public function setAttachmentUrl(string $attachmentUrl) : AttachmentInterface
     {
         return $this->setData(self::ATTACHMENT_URL, $attachmentUrl);
     }
 
-
     /**
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentExtensionInterface | null
+     * @return AttachmentExtensionInterface | null
      */
     public function getExtensionAttributes() : ?AttachmentExtensionInterface
     {
@@ -290,9 +257,8 @@ class Attachment extends AbstractExtensibleModel implements AttachmentInterface,
     }
 
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentExtensionInterface $extensionAttributes
-     *
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @param AttachmentExtensionInterface $extensionAttributes
+     * @return AttachmentInterface
      */
     public function setExtensionAttributes(AttachmentExtensionInterface $extensionAttributes) : AttachmentInterface
     {

@@ -18,3 +18,7 @@
 ### 1.2.3 ###
 * fixed conflict of file processing when downloadable product is going to have attachments
 * added more verbosity to file uploader in adminhtml
+
+### 1.3.0 ###
+* major refactor of controllers
+* fix for not working (because of different reasons) file downloads on frontend
