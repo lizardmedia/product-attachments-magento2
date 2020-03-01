@@ -12,10 +12,10 @@ declare(strict_types = 1);
 namespace LizardMedia\ProductAttachment\Model\ResourceModel;
 
 use \LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
-use \Magento\Catalog\Api\Data\ProductInterface;
-use \Magento\Framework\EntityManager\MetadataPool;
+use \LizardMedia\ProductAttachment\Helper\Various as VariousHelper;
 use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use \Magento\Framework\Model\ResourceModel\Db\Context;
+
 
 /**
  * Class Attachment
@@ -24,23 +24,23 @@ use \Magento\Framework\Model\ResourceModel\Db\Context;
 class Attachment extends AbstractDb
 {
     /**
-     * @var \Magento\Framework\EntityManager\MetadataPool
+     * @var VariousHelper
      */
-    private $metadataPool;
+    private $variousHelper;
 
 
     /**
      * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
-     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
+     * @param VariousHelper $variousHelper
      * @param string $connectionName
      */
     public function __construct(
-        MetadataPool $metadataPool,
         Context $context,
+        VariousHelper $variousHelper,
         $connectionName = null
     ) {
         parent::__construct($context, $connectionName);
-        $this->metadataPool = $metadataPool;
+        $this->variousHelper = $variousHelper;
     }
 
 
@@ -162,7 +162,7 @@ class Attachment extends AbstractDb
             ['cpe' => $this->getTable('catalog_product_entity')],
             sprintf(
                 'cpe.entity_id = m.product_id',
-                $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField()
+                $this->variousHelper->getLinkFieldValue()
             ),
             []
         )->joinLeft(

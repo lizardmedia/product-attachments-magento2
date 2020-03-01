@@ -16,11 +16,12 @@ use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
 use LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
 use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
 use LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface;
-use LizardMedia\ProductAttachment\Model\Attachment\ContentValidator;
+use LizardMedia\ProductAttachment\Helper\Various as VariousHelper;
 use LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor;
+use LizardMedia\ProductAttachment\Model\Attachment\ContentValidator;
 use LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment as AttachmentHandler;
-use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection;
 use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection as AttachmentCollection;
+use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection;
 use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\CollectionFactory as AttachmentCollectionFactory;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
@@ -29,7 +30,6 @@ use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
-use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
@@ -91,15 +91,15 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
 
     /**
-     * @var MetadataPool
-     */
-    private $metadataPool;
-
-
-    /**
      * @var JsonSeliarizer
      */
     private $jsonSeliarizer;
+
+
+    /**
+     * @var VariousHelper
+     */
+    private $variousHelper;
 
 
     /**
@@ -112,8 +112,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param ProductRepositoryInterface $productRepository
      * @param JoinProcessorInterface $extensionAttributesJoinProcessor
      * @param SearchResultsInterfaceFactory $searchResultsFactory
-     * @param MetadataPool $metadataPool
      * @param JsonSeliarizer $jsonSeliarizer
+     * @param VariousHelper $variousHelper
      */
     public function __construct(
         AttachmentFactoryInterface $attachmentFactory,
@@ -125,8 +125,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         ProductRepositoryInterface $productRepository,
         JoinProcessorInterface $extensionAttributesJoinProcessor,
         SearchResultsInterfaceFactory $searchResultsFactory,
-        MetadataPool $metadataPool,
-        JsonSeliarizer $jsonSeliarizer
+        JsonSeliarizer $jsonSeliarizer,
+        VariousHelper $variousHelper
     ) {
         $this->attachmentFactory = $attachmentFactory;
         $this->fileContentUploader = $fileContentUploader;
@@ -137,8 +137,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $this->productRepository = $productRepository;
         $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
         $this->searchResultFactory = $searchResultsFactory;
-        $this->metadataPool = $metadataPool;
         $this->jsonSeliarizer = $jsonSeliarizer;
+        $this->variousHelper = $variousHelper;
     }
 
 
@@ -410,9 +410,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             throw new NoSuchEntityException(__('There is no attachment with provided ID.'));
         }
 
-        $linkFieldValue = $product->getData(
-            $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField()
-        );
+        $linkFieldValue = $this->variousHelper->getLinkFieldValue();
 
         if ($existingAttachment->getProductId() != $linkFieldValue) {
             throw new InputException(__('Provided attachment is not related to given product.'));

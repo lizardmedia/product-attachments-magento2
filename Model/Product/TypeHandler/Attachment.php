@@ -15,7 +15,7 @@ use \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
 use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
 use \LizardMedia\ProductAttachment\Model\ResourceModel\AttachmentFactory;
 use \LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
-use \Magento\Catalog\Api\Data\ProductInterface;
+use \LizardMedia\ProductAttachment\Helper\Various as VariousHelper;
 use \Magento\Catalog\Model\Product;
 use \Magento\Downloadable\Helper\Download;
 use \Magento\Downloadable\Helper\File;
@@ -52,16 +52,19 @@ class Attachment extends AbstractTypeHandler
      * @param \LizardMedia\ProductAttachment\Model\ResourceModel\AttachmentFactory $attachmentResourceFactory
      * @param \Magento\Downloadable\Helper\File $downloadableFile
      * @param \Magento\Framework\Json\Helper\Data $jsonHelper
+     * @param VariousHelper $variousHelper
      */
     public function __construct(
         AttachmentFactoryInterface $attachmentFactory,
         AttachmentFactory $attachmentResourceFactory,
         File $downloadableFile,
-        Data $jsonHelper
+        Data $jsonHelper,
+        VariousHelper $variousHelper
     ) {
         parent::__construct($jsonHelper, $downloadableFile);
         $this->attachmentFactory = $attachmentFactory;
         $this->attachmentResourceFactory = $attachmentResourceFactory;
+        $this->variousHelper = $variousHelper;
     }
 
 
@@ -119,9 +122,7 @@ class Attachment extends AbstractTypeHandler
         )->setAttachmentType(
             $data[AttachmentModel::ATTACHMENT_TYPE]
         )->setProductId(
-            (int) $product->getData(
-                $this->getMetadataPool()->getMetadata(ProductInterface::class)->getLinkField()
-            )
+            (int) $product->getData($this->variousHelper->getLinkFieldValue())
         );
         $component->setStoreId(
             (int) $product->getStoreId()
