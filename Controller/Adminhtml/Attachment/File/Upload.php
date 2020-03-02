@@ -11,15 +11,17 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Controller\Adminhtml\Attachment\File;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Model\Attachment;
-use \Magento\Backend\App\Action\Context;
-use \Magento\Downloadable\Controller\Adminhtml\Downloadable\File;
-use \Magento\Downloadable\Helper\File as FileHelper;
-use \Magento\MediaStorage\Helper\File\Storage\Database;
-use \Magento\MediaStorage\Model\File\UploaderFactory;
-use \Magento\Framework\Controller\ResultFactory;
-use \Magento\Framework\Controller\ResultInterface;
+use Exception;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Model\Attachment;
+use Magento\Backend\App\Action\Context;
+use Magento\Downloadable\Controller\Adminhtml\Downloadable\File;
+use Magento\Downloadable\Helper\File as FileHelper;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\MediaStorage\Helper\File\Storage\Database;
+use Magento\MediaStorage\Model\File\UploaderFactory;
 
 /**
  * Class Upload
@@ -28,35 +30,36 @@ use \Magento\Framework\Controller\ResultInterface;
 class Upload extends File
 {
     /**
-     * @var \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @var string
+     */
+    const DOWNLOADABLE_ATTACHEMENT_TYPE = 'attachments';
+
+    /**
+     * @var AttachmentInterface
      */
     private $attachment;
 
-
     /**
-     * @var \Magento\Downloadable\Helper\File
+     * @var FileHelper
      */
     private $fileHelper;
 
-
     /**
-     * @var \Magento\MediaStorage\Helper\File\Storage\Database
+     * @var Database
      */
     private $storageDatabase;
 
-
     /**
-     * @var \Magento\MediaStorage\Model\File\UploaderFactory
+     * @var UploaderFactory
      */
     private $uploaderFactory;
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Downloadable\Helper\File $fileHelper
-     * @param \Magento\MediaStorage\Helper\File\Storage\Database $storageDatabase
-     * @param \Magento\MediaStorage\Model\File\UploaderFactory $uploaderFactory
+     * @param AttachmentInterface $attachment
+     * @param Context $context
+     * @param FileHelper $fileHelper
+     * @param Database $storageDatabase
+     * @param UploaderFactory $uploaderFactory
      */
     public function __construct(
         AttachmentInterface $attachment,
@@ -73,14 +76,14 @@ class Upload extends File
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     public function execute() : ResultInterface
     {
         $type = $this->getRequest()->getParam(Attachment::ATTACHMENT_TYPE);
         $tmpPath = '';
 
-        if ($type == 'attachments') {
+        if ($type === self::DOWNLOADABLE_ATTACHEMENT_TYPE) {
             $tmpPath = $this->attachment->getBaseTmpPath();
         }
 
@@ -89,7 +92,7 @@ class Upload extends File
             $result = $this->fileHelper->uploadFromTmp($tmpPath, $uploader);
 
             if (!$result) {
-                throw new \Exception(__('File can not be moved from temporary folder to the destination folder.'));
+                throw new FileSystemException(__('File can not be moved from temporary folder to the destination folder.'));
             }
 
             unset($result['tmp_name'], $result['path']);
@@ -111,8 +114,8 @@ class Upload extends File
                 'path' => $this->_getSession()->getCookiePath(),
                 'domain' => $this->_getSession()->getCookieDomain(),
             ];
-        } catch (\Exception $e) {
-            $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
+        } catch (Exception $exception) {
+            $result = ['error' => $exception->getMessage(), 'errorcode' => $exception->getCode()];
         }
 
         return $this->resultFactory->create(ResultFactory::TYPE_JSON)->setData($result);

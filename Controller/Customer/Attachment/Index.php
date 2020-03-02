@@ -11,14 +11,15 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Controller\Customer\Attachment;
 
-use \Magento\Customer\Model\Session;
-use \Magento\Customer\Model\Url;
-use \Magento\Framework\App\Action\Action;
-use \Magento\Framework\App\Action\Context;
-use \Magento\Framework\App\RequestInterface;
-use \Magento\Framework\Controller\ResultInterface;
-use \Magento\Framework\Exception\NotFoundException;
-use \Magento\Framework\View\Result\PageFactory;
+use Magento\Customer\Model\Session;
+use Magento\Customer\Model\Url;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Exception\NotFoundException;
+use Magento\Framework\View\Result\Page;
+use Magento\Framework\View\Result\PageFactory;
 
 /**
  * Class Index
@@ -27,28 +28,25 @@ use \Magento\Framework\View\Result\PageFactory;
 class Index extends Action
 {
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var Session
      */
     private $customerSession;
 
-
     /**
-     * @var \Magento\Customer\Model\Url
+     * @var Url
      */
     private $customerUrl;
 
-
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var PageFactory
      */
     private $resultPageFactory;
 
-
     /**
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Customer\Model\Url $customerUrl
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param Session $customerSession
+     * @param Url $customerUrl
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
      */
     public function __construct(
         Session $customerSession,
@@ -62,15 +60,12 @@ class Index extends Action
         $this->resultPageFactory = $resultPageFactory;
     }
 
-
     /**
      * Authenticate customer.
      *
-     * @param \Magento\Framework\App\RequestInterface $request
-     *
-     * @throws \Magento\Framework\Exception\NotFoundException
-     *
-     * @return \Magento\Framework\App\ResponseInterface
+     * @param RequestInterface $request
+     * @return ResponseInterface
+     * @throws NotFoundException
      */
     public function dispatch(RequestInterface $request)
     {
@@ -83,13 +78,11 @@ class Index extends Action
         return parent::dispatch($request);
     }
 
-
     /**
-     * @return \Magento\Framework\View\Result\Page $resultPage
+     * @return Page
      */
-    public function execute() : ResultInterface
+    public function execute(): Page
     {
-        $resultPage = $this->resultPageFactory->create();
-        return $resultPage;
+        return $this->resultPageFactory->create();
     }
 }

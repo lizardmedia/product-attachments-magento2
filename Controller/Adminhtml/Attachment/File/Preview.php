@@ -11,16 +11,16 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Controller\Adminhtml\Attachment\File;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
-use \LizardMedia\ProductAttachment\Controller\DownloadProcessor;
-use \LizardMedia\ProductAttachment\Model\Attachment;
-use \Magento\Backend\App\Action;
-use \Magento\Backend\App\Action\Context;
-use \Magento\Downloadable\Helper\Download as DownloadHelper;
-use \Magento\Downloadable\Helper\File as FileHelper;
-use \Magento\Framework\Controller\ResultInterface;
-use \Magento\Framework\Exception\NoSuchEntityException;
+use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Controller\DownloadProcessor;
+use LizardMedia\ProductAttachment\Model\Attachment;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class Preview
@@ -29,85 +29,52 @@ use \Magento\Framework\Exception\NoSuchEntityException;
 class Preview extends Action
 {
     /**
-     * @var string
-     */
-    private $resource;
-
-
-    /**
-     * @var string
-     */
-    private $resourceType;
-
-
-    /**
-     * @var \LizardMedia\ProductAttachment\Controller\DownloadProcessor
-     */
-    private $downloadProcessor;
-
-
-    /**
-     * @var \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface
+     * @var AttachmentRepositoryInterface
      */
     private $attachmentRepository;
 
-
     /**
-     * @var \Magento\Downloadable\Helper\File
+     * @var DownloadProcessor
      */
-    private $fileHelper;
-
+    private $downloadProcessor;
 
     /**
-     * @param \LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface $attachmentRepository
-     * @param \LizardMedia\ProductAttachment\Controller\DownloadProcessor $downloadProcessor
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Downloadable\Helper\File $fileHelper
+     * @param AttachmentRepositoryInterface $attachmentRepository
+     * @param DownloadProcessor $downloadProcessor
+     * @param Context $context
      */
     public function __construct(
         AttachmentRepositoryInterface $attachmentRepository,
         DownloadProcessor $downloadProcessor,
-        Context $context,
-        FileHelper $fileHelper
+        Context $context
     ) {
         parent::__construct($context);
         $this->attachmentRepository = $attachmentRepository;
         $this->downloadProcessor = $downloadProcessor;
-        $this->fileHelper = $fileHelper;
     }
 
-
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
-    public function execute() : ResultInterface
+    public function execute(): ResultInterface
     {
         $attachmentId = $this->getRequest()->getParam(Attachment::ID, 0);
         $attachment = $this->loadAttachmentById((int) $attachmentId);
         if ($attachment instanceof AttachmentInterface) {
-            if ($attachment->getAttachmentType() == DownloadHelper::LINK_TYPE_URL) {
-                $this->processUrlType($attachment);
-            } elseif ($attachment->getAttachmentType() == DownloadHelper::LINK_TYPE_FILE) {
-                $this->processFileType($attachment);
-            }
-
             try {
-                $this->downloadProcessor->processDownload(
-                    $this->getResponse(),
-                    (string) $this->resource,
-                    (string) $this->resourceType
-                );
-            } catch (\Exception $e) {
-                $this->messageManager->addErrorMessage(__('Something went wrong while getting the requested content.'));
+                return $this->downloadProcessor->processDownload($attachment);
+            } catch (FileSystemException $exception) {
+                $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
+                return $this->goBack();
             }
+        } else {
+            return $this->goBack();
         }
     }
 
-
     /**
      * @param int $id
-     *
-     * @return mixed \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface | null
+     * @return AttachmentInterface | null
      */
     private function loadAttachmentById(int $id) : ?AttachmentInterface
     {
@@ -115,34 +82,15 @@ class Preview extends Action
             return $this->attachmentRepository->getById($id);
         } catch (NoSuchEntityException $e) {
             $this->messageManager->addErrorMessage(__('Attachment not found.'));
+            return null;
         }
     }
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
-     *
-     * @return void
+     * @return Redirect
      */
-    private function processUrlType(AttachmentInterface $attachment) : void
+    private function goBack(): Redirect
     {
-        $this->resource = $attachment->getAttachmentUrl();
-        $this->resourceType = DownloadHelper::LINK_TYPE_URL;
-    }
-
-
-    /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
-     *
-     * @return void
-     */
-    private function processFileType(AttachmentInterface $attachment) : void
-    {
-        $this->resource = $this->fileHelper->getFilePath(
-            $attachment->getBasePath(),
-            $attachment->getAttachmentFile()
-        );
-
-        $this->resourceType = DownloadHelper::LINK_TYPE_FILE;
+        return $this->resultRedirectFactory->create()->setRefererUrl();
     }
 }
