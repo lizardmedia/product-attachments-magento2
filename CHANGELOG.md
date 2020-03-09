@@ -22,3 +22,6 @@
 ### 1.3.0 ###
 * major refactor of controllers
 * fix for not working (because of different reasons) file downloads on frontend
+
+### 1.3.1 ###
+* fix for adminthtml routes.xml
