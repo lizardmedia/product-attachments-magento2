@@ -11,7 +11,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
 
     <router id="admin">
-        <route id="adminhtml" frontName="downloadable">
+        <route id="downloadable" frontName="downloadable">
             <module name="LizardMedia_ProductAttachment" before="Magento_Backend" />
         </route>
     </router>
