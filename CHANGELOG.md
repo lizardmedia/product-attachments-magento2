@@ -25,3 +25,6 @@
 
 ### 1.3.1 ###
 * fix for adminthtml routes.xml
+
+### 1.3.2 ###
+* fix for incorrect admin controller paths

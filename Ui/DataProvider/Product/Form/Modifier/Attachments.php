@@ -272,7 +272,7 @@ class Attachments extends AbstractModifier
             'fileInputName' => 'attachments',
             'uploaderConfig' => [
                 'url' => $this->urlBuilder->addSessionParam()->getUrl(
-                    'adminhtml/attachment_file/upload',
+                    'downloadable/attachment_file/upload',
                     [Attachment::ATTACHMENT_TYPE => 'attachments', '_secure' => true]
                 ),
             ],
