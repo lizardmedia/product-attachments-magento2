@@ -148,7 +148,7 @@ class Attachments
                     'size' => $this->downloadableFile->getFileSize($file),
                     'status' => 'old',
                     'url' => $this->urlBuilder->addSessionParam()->getUrl(
-                        'adminhtml/attachment_file/preview',
+                        'downloadable/attachment_file/preview',
                         [AttachmentModel::ID => $attachment->getId(), '_secure' => true]
                     ),
                 ];
