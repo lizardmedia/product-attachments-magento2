@@ -11,17 +11,19 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Model\Product\TypeHandler;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Model\ResourceModel\AttachmentFactory;
-use \LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
-use \Magento\Catalog\Api\Data\ProductInterface;
-use \Magento\Catalog\Model\Product;
-use \Magento\Downloadable\Helper\Download;
-use \Magento\Downloadable\Helper\File;
-use \Magento\Downloadable\Model\ComponentInterface;
-use \Magento\Downloadable\Model\Product\TypeHandler\AbstractTypeHandler;
-use \Magento\Framework\Json\Helper\Data;
+use Exception;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Helper\Version;
+use LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
+use LizardMedia\ProductAttachment\Model\ResourceModel\AttachmentFactory;
+use Magento\Catalog\Model\Product;
+use Magento\Downloadable\Helper\Download;
+use Magento\Downloadable\Helper\File;
+use Magento\Downloadable\Model\ComponentInterface;
+use Magento\Downloadable\Model\Product\TypeHandler\AbstractTypeHandler;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Json\Helper\Data;
 
 /**
  * Class Attachment
@@ -36,34 +38,39 @@ class Attachment extends AbstractTypeHandler
     const IDENTIFIER_KEY = 'id';
 
     /**
-     * @var \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface
+     * @var AttachmentFactoryInterface
      */
     private $attachmentFactory;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\ResourceModel\AttachmentFactory
+     * @var AttachmentFactory
      */
     private $attachmentResourceFactory;
 
+    /**
+     * @var Version
+     */
+    private $version;
 
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface $attachmentFactory
-     * @param \LizardMedia\ProductAttachment\Model\ResourceModel\AttachmentFactory $attachmentResourceFactory
-     * @param \Magento\Downloadable\Helper\File $downloadableFile
-     * @param \Magento\Framework\Json\Helper\Data $jsonHelper
+     * @param AttachmentFactoryInterface $attachmentFactory
+     * @param AttachmentFactory $attachmentResourceFactory
+     * @param Version $version
+     * @param File $downloadableFile
+     * @param Data $jsonHelper
      */
     public function __construct(
         AttachmentFactoryInterface $attachmentFactory,
         AttachmentFactory $attachmentResourceFactory,
+        Version $version,
         File $downloadableFile,
         Data $jsonHelper
     ) {
         parent::__construct($jsonHelper, $downloadableFile);
         $this->attachmentFactory = $attachmentFactory;
         $this->attachmentResourceFactory = $attachmentResourceFactory;
+        $this->version = $version;
     }
-
 
     /**
      * @return string
@@ -73,7 +80,6 @@ class Attachment extends AbstractTypeHandler
         return self::DATA_KEY;
     }
 
-
     /**
      * @return string
      */
@@ -81,7 +87,6 @@ class Attachment extends AbstractTypeHandler
     {
         return self::IDENTIFIER_KEY;
     }
-
 
     /**
      * @return void
@@ -93,24 +98,20 @@ class Attachment extends AbstractTypeHandler
         }
     }
 
-
     /**
-     * @return \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface
+     * @return AttachmentInterface
      */
     protected function createItem() : AttachmentInterface
     {
         return $this->attachmentFactory->create();
     }
 
-
     /**
-     * @param \Magento\Downloadable\Model\ComponentInterface $component
+     * @param ComponentInterface $component
      * @param array $data
-     * @param \Magento\Catalog\Model\Product $product
-     *
-     * @throws \Exception
-     *
+     * @param Product $product
      * @return void
+     * @throws Exception
      */
     protected function setDataToModel(ComponentInterface $component, array $data, Product $product) : void
     {
@@ -119,27 +120,23 @@ class Attachment extends AbstractTypeHandler
         )->setAttachmentType(
             $data[AttachmentModel::ATTACHMENT_TYPE]
         )->setProductId(
-            (int) $product->getData(
-                $this->getMetadataPool()->getMetadata(ProductInterface::class)->getLinkField()
-            )
+            (int) $product->getData($this->version->getLinkFieldValue())
         );
         $component->setStoreId(
             (int) $product->getStoreId()
         );
     }
 
-
     /**
-     * @param \Magento\Downloadable\Model\ComponentInterface $component
+     * @param ComponentInterface $component
      * @param array $files
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
-     *
      * @return void
+     * @throws LocalizedException
+     *
      */
     protected function setFiles(ComponentInterface $component, array $files) : void
     {
-        if ($component->getAttachmentType() == Download::LINK_TYPE_FILE) {
+        if ($component->getAttachmentType() === Download::LINK_TYPE_FILE) {
             $fileName = $this->downloadableFile->moveFileFromTmp(
                 $component->getBaseTmpPath(),
                 $component->getBasePath(),
@@ -151,8 +148,8 @@ class Attachment extends AbstractTypeHandler
 
 
     /**
-     * @param \Magento\Downloadable\Model\ComponentInterface $component
-     * @param \Magento\Catalog\Model\Product $product
+     * @param ComponentInterface $component
+     * @param Product $product
      *
      * @return void
      */

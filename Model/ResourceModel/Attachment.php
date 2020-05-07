@@ -11,11 +11,9 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Model\ResourceModel;
 
-use \LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
-use \Magento\Catalog\Api\Data\ProductInterface;
-use \Magento\Framework\EntityManager\MetadataPool;
-use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use \Magento\Framework\Model\ResourceModel\Db\Context;
+use Exception;
+use LizardMedia\ProductAttachment\Model\Attachment as AttachmentModel;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 /**
  * Class Attachment
@@ -24,41 +22,18 @@ use \Magento\Framework\Model\ResourceModel\Db\Context;
 class Attachment extends AbstractDb
 {
     /**
-     * @var \Magento\Framework\EntityManager\MetadataPool
-     */
-    private $metadataPool;
-
-
-    /**
-     * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
-     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
-     * @param string $connectionName
-     */
-    public function __construct(
-        MetadataPool $metadataPool,
-        Context $context,
-        $connectionName = null
-    ) {
-        parent::__construct($context, $connectionName);
-        $this->metadataPool = $metadataPool;
-    }
-
-
-    /**
      * @return void
      */
-    protected function _construct()
+    protected function _construct(): void
     {
         $this->_init(AttachmentModel::MAIN_TABLE, AttachmentModel::ID);
     }
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Model\Attachment $attachment
-     *
-     * @return \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment
+     * @param AttachmentModel $attachment
+     * @return Attachment
      */
-    public function saveItemTitle(AttachmentModel $attachment) : Attachment
+    public function saveItemTitle(AttachmentModel $attachment): Attachment
     {
         $connection = $this->getConnection();
         $attachmentTitleTable = $this->getTable(AttachmentModel::TITLE_TABLE);
@@ -96,13 +71,11 @@ class Attachment extends AbstractDb
         return $this;
     }
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Model\Attachment $attachment
-     *
-     * @return \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment
+     * @param AttachmentModel $attachment
+     * @return Attachment
      */
-    public function loadItemTitle(AttachmentModel $attachment) : Attachment
+    public function loadItemTitle(AttachmentModel $attachment): Attachment
     {
         $connection = $this->getConnection();
         $attachmentTitleTable = $this->getTable(AttachmentModel::TITLE_TABLE);
@@ -142,12 +115,10 @@ class Attachment extends AbstractDb
      *
      * @param int $productId
      * @param int $storeId
-     *
-     * @throws \Exception
-     *
+     * @throws Exception
      * @return array
      */
-    public function getSearchableData(int $productId, int $storeId) : array
+    public function getSearchableData(int $productId, int $storeId): array
     {
         $connection = $this->getConnection();
         $ifNullDefaultTitle = $connection->getIfNullSql('st.title', 'd.title');
@@ -160,10 +131,7 @@ class Attachment extends AbstractDb
             []
         )->join(
             ['cpe' => $this->getTable('catalog_product_entity')],
-            sprintf(
-                'cpe.entity_id = m.product_id',
-                $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField()
-            ),
+            'cpe.entity_id = m.product_id',
             []
         )->joinLeft(
             ['st' => $this->getTable(AttachmentModel::TITLE_TABLE)],

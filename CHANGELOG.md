@@ -28,3 +28,7 @@
 
 ### 1.3.2 ###
 * fix for incorrect admin controller paths
+
+### 1.3.3 ###
+* enterprise magento version compatibility patch
+* minor refactor
