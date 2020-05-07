@@ -32,3 +32,4 @@
 ### 1.3.3 ###
 * enterprise magento version compatibility patch
 * minor refactor
+* compatibility fix for magento CE 2.3.5
