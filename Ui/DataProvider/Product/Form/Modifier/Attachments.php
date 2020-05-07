@@ -271,7 +271,7 @@ class Attachments extends AbstractModifier
             'elementTmpl' => 'Magento_Downloadable/components/file-uploader',
             'fileInputName' => 'attachments',
             'uploaderConfig' => [
-                'url' => $this->urlBuilder->addSessionParam()->getUrl(
+                'url' => $this->urlBuilder->getUrl(
                     'downloadable/attachment_file/upload',
                     [Attachment::ATTACHMENT_TYPE => 'attachments', '_secure' => true]
                 ),
