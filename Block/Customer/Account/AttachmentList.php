@@ -11,14 +11,14 @@ declare(strict_types = 1);
 
 namespace LizardMedia\ProductAttachment\Block\Customer\Account;
 
-use \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
-use \LizardMedia\ProductAttachment\Api\PurchasedItemsAttachmentProviderInterface;
-use \LizardMedia\ProductAttachment\Api\SettingsInterface;
-use \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection;
-use \Magento\Customer\Helper\Session\CurrentCustomer;
-use \Magento\Framework\Message\ManagerInterface;
-use \Magento\Framework\View\Element\Template;
-use \Magento\Framework\View\Element\Template\Context;
+use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use LizardMedia\ProductAttachment\Api\PurchasedItemsAttachmentProviderInterface;
+use LizardMedia\ProductAttachment\Api\SettingsInterface;
+use LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection;
+use Magento\Customer\Helper\Session\CurrentCustomer;
+use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 
 /**
  * Class Attachment
@@ -31,43 +31,37 @@ class AttachmentList extends Template
      */
     private $isCollectionLoaded = false;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Api\PurchasedItemsAttachmentProviderInterface
+     * @var PurchasedItemsAttachmentProviderInterface
      */
     private $purchasedItemsAttachmentProvider;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Api\SettingsInterface
+     * @var SettingsInterface
      */
     private $settings;
 
-
     /**
-     * @var \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection
+     * @var Collection
      */
     private $collection;
 
-
     /**
-     * @var \Magento\Customer\Helper\Session\CurrentCustomer
+     * @var CurrentCustomer
      */
     private $currentCustomer;
 
-
     /**
-     * @var \Magento\Framework\Message\ManagerInterface
+     * @var ManagerInterface
      */
     private $messageManager;
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\PurchasedItemsAttachmentProviderInterface $purchasedItemsAttachmentProvider
-     * @param \LizardMedia\ProductAttachment\Api\SettingsInterface $settings
-     * @param \Magento\Customer\Helper\Session\CurrentCustomer $currentCustomer
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param PurchasedItemsAttachmentProviderInterface $purchasedItemsAttachmentProvider
+     * @param SettingsInterface $settings
+     * @param CurrentCustomer $currentCustomer
+     * @param Context $context
+     * @param ManagerInterface $messageManager
      * @param array $data
      */
     public function __construct(
@@ -85,10 +79,7 @@ class AttachmentList extends Template
         $this->messageManager = $messageManager;
     }
 
-
     /**
-     * @throws \Exception
-     *
      * @return $this
      */
     protected function _prepareLayout()
@@ -103,9 +94,8 @@ class AttachmentList extends Template
         return $this;
     }
 
-
     /**
-     * @return \LizardMedia\ProductAttachment\Model\ResourceModel\Attachment\Collection
+     * @return Collection
      */
     public function getAttachments() : Collection
     {
@@ -125,7 +115,6 @@ class AttachmentList extends Template
         return $this->collection;
     }
 
-
     /**
      * @return string
      */
@@ -138,17 +127,17 @@ class AttachmentList extends Template
         return $this->getUrl('customer/account/');
     }
 
-
     /**
-     * @param \LizardMedia\ProductAttachment\Api\Data\AttachmentInterface $attachment
-     *
+     * @param AttachmentInterface $attachment
      * @return string
      */
     public function getDownloadUrl(AttachmentInterface $attachment) : string
     {
-        return $this->getUrl('downloadable/download/attachment', ['id' => $attachment->getId(), '_secure' => true]);
+        return $this->getUrl(
+            'downloadable/download/attachment',
+            ['id' => $attachment->getId(), '_secure' => true]
+        );
     }
-
 
     /**
      * @return bool

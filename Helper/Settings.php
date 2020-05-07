@@ -48,7 +48,7 @@ class Settings extends AbstractHelper implements SettingsInterface
      * @param string $scope
      * @return string
      */
-    public function getAttachmentDefaultTitle($scope = ScopeInterface::SCOPE_STORE) : string
+    public function getAttachmentDefaultTitle($scope = ScopeInterface::SCOPE_STORE): string
     {
         return $this->scopeConfig->getValue(self::PRODUCT_ATTACHMENT_DEFAULT_TITLE_XML_PATH);
     }
@@ -57,16 +57,16 @@ class Settings extends AbstractHelper implements SettingsInterface
      * @param string $scope
      * @return bool
      */
-    public function areLinksOpenedInNewWindow($scope = ScopeInterface::SCOPE_STORE) : bool
+    public function areLinksOpenedInNewWindow($scope = ScopeInterface::SCOPE_STORE): bool
     {
-        return (bool) $this->scopeConfig->getValue(self::PRODUCT_ATTACHMENT_OPEN_IN_NEW_WINDOW_XML_PATH);
+        return (bool) $this->scopeConfig->isSetFlag(self::PRODUCT_ATTACHMENT_OPEN_IN_NEW_WINDOW_XML_PATH);
     }
 
     /**
      * @param string $scope
      * @return string
      */
-    public function getContentDisposition($scope = ScopeInterface::SCOPE_STORE) : string
+    public function getContentDisposition($scope = ScopeInterface::SCOPE_STORE): string
     {
         return $this->scopeConfig->getValue(self::PRODUCT_ATTACHMENT_USE_CONTENT_DISPOSITION_XML_PATH);
     }

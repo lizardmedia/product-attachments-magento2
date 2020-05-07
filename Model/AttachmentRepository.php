@@ -16,6 +16,7 @@ use LizardMedia\ProductAttachment\Api\AttachmentRepositoryInterface;
 use LizardMedia\ProductAttachment\Api\Data\AttachmentFactoryInterface;
 use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
 use LizardMedia\ProductAttachment\Api\Data\File\ContentUploaderInterface;
+use LizardMedia\ProductAttachment\Helper\Version;
 use LizardMedia\ProductAttachment\Model\Attachment\ContentValidator;
 use LizardMedia\ProductAttachment\Model\AttachmentRepository\SearchResultProcessor;
 use LizardMedia\ProductAttachment\Model\Product\TypeHandler\Attachment as AttachmentHandler;
@@ -29,7 +30,6 @@ use Magento\Framework\Api\ExtensionAttribute\JoinProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
-use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\StateException;
@@ -71,36 +71,30 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     private $attachmentCollectionFactory;
 
+    /**
+     * @var Version
+     */
+    private $version;
 
     /**
      * @var ProductRepositoryInterface
      */
     private $productRepository;
 
-
     /**
      * @var JoinProcessorInterface
      */
     private $extensionAttributesJoinProcessor;
-
 
     /**
      * @var SearchResultsInterfaceFactory
      */
     private $searchResultFactory;
 
-
-    /**
-     * @var MetadataPool
-     */
-    private $metadataPool;
-
-
     /**
      * @var JsonSeliarizer
      */
     private $jsonSeliarizer;
-
 
     /**
      * @param AttachmentFactoryInterface $attachmentFactory
@@ -109,10 +103,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param SearchResultProcessor $searchResultProcessor
      * @param AttachmentHandler $attachmentTypeHandler
      * @param AttachmentCollectionFactory $attachmentCollectionFactory
+     * @param Version $version
      * @param ProductRepositoryInterface $productRepository
      * @param JoinProcessorInterface $extensionAttributesJoinProcessor
      * @param SearchResultsInterfaceFactory $searchResultsFactory
-     * @param MetadataPool $metadataPool
      * @param JsonSeliarizer $jsonSeliarizer
      */
     public function __construct(
@@ -122,10 +116,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         SearchResultProcessor $searchResultProcessor,
         AttachmentHandler $attachmentTypeHandler,
         AttachmentCollectionFactory $attachmentCollectionFactory,
+        Version $version,
         ProductRepositoryInterface $productRepository,
         JoinProcessorInterface $extensionAttributesJoinProcessor,
         SearchResultsInterfaceFactory $searchResultsFactory,
-        MetadataPool $metadataPool,
         JsonSeliarizer $jsonSeliarizer
     ) {
         $this->attachmentFactory = $attachmentFactory;
@@ -134,10 +128,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $this->searchResultProcessor = $searchResultProcessor;
         $this->attachmentTypeHandler = $attachmentTypeHandler;
         $this->attachmentCollectionFactory = $attachmentCollectionFactory;
+        $this->version = $version;
         $this->productRepository = $productRepository;
         $this->extensionAttributesJoinProcessor = $extensionAttributesJoinProcessor;
         $this->searchResultFactory = $searchResultsFactory;
-        $this->metadataPool = $metadataPool;
         $this->jsonSeliarizer = $jsonSeliarizer;
     }
 
@@ -410,15 +404,13 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             throw new NoSuchEntityException(__('There is no attachment with provided ID.'));
         }
 
-        $linkFieldValue = $product->getData(
-            $this->metadataPool->getMetadata(ProductInterface::class)->getLinkField()
-        );
+        $linkFieldValue = (int) $product->getData($this->version->getLinkFieldValue());
 
-        if ($existingAttachment->getProductId() != $linkFieldValue) {
+        if ($existingAttachment->getProductId() !== $linkFieldValue) {
             throw new InputException(__('Provided attachment is not related to given product.'));
         }
 
-        $validateFileContent = $attachment->getAttachmentFileContent() === null ? false : true;
+        $validateFileContent = $attachment->getAttachmentFileContent() !== null;
 
         if (!$this->contentValidator->isValid($attachment, $validateFileContent)) {
             throw new InputException(__('Provided attachment information is invalid.'));
@@ -435,7 +427,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
                 throw new InputException(__('Attachment title cannot be empty.'));
             }
 
-            $existingAttachment->setTitle(null);
+            $existingAttachment->setTitle('');
         } else {
             $existingAttachment->setTitle($attachment->getTitle());
         }
