@@ -21,24 +21,19 @@ interface SettingsInterface
 {
     /**
      * @param string $scope
-     *
      * @return string
      */
-    public function getAttachmentDefaultTitle($scope = ScopeInterface::SCOPE_STORE) : string;
-
+    public function getAttachmentDefaultTitle($scope = ScopeInterface::SCOPE_STORE): string;
 
     /**
      * @param string $scope
-     *
      * @return bool
      */
-    public function areLinksOpenedInNewWindow($scope = ScopeInterface::SCOPE_STORE) : bool;
-
+    public function areLinksOpenedInNewWindow($scope = ScopeInterface::SCOPE_STORE): bool;
 
     /**
      * @param string $scope
-     *
      * @return string
      */
-    public function getContentDisposition($scope = ScopeInterface::SCOPE_STORE) : string;
+    public function getContentDisposition($scope = ScopeInterface::SCOPE_STORE): string;
 }
