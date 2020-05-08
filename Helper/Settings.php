@@ -50,7 +50,7 @@ class Settings extends AbstractHelper implements SettingsInterface
      */
     public function getAttachmentDefaultTitle($scope = ScopeInterface::SCOPE_STORE): string
     {
-        return $this->scopeConfig->getValue(self::PRODUCT_ATTACHMENT_DEFAULT_TITLE_XML_PATH);
+        return (string) $this->scopeConfig->getValue(self::PRODUCT_ATTACHMENT_DEFAULT_TITLE_XML_PATH);
     }
 
     /**
@@ -68,6 +68,6 @@ class Settings extends AbstractHelper implements SettingsInterface
      */
     public function getContentDisposition($scope = ScopeInterface::SCOPE_STORE): string
     {
-        return $this->scopeConfig->getValue(self::PRODUCT_ATTACHMENT_USE_CONTENT_DISPOSITION_XML_PATH);
+        return (string) $this->scopeConfig->getValue(self::PRODUCT_ATTACHMENT_USE_CONTENT_DISPOSITION_XML_PATH);
     }
 }
