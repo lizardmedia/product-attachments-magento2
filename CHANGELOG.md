@@ -33,3 +33,6 @@
 * enterprise magento version compatibility patch
 * minor refactor
 * compatibility fix for magento CE 2.3.5
+
+### 1.3.4 ###
+* fix for return type fix for configuration provider
