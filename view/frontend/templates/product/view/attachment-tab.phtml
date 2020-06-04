@@ -1,8 +1,7 @@
 <?php /** @var $block LizardMedia\ProductAttachment\Block\Product\AttachmentTab */ ?>
-<div id="product-attachments-container" data-role="product-attachments"></div>
-
 <?php $attachments = $block->getAttachments() ?>
 <?php if (count($attachments)) : ?>
+    <div id="product-attachments-container" data-role="product-attachments"></div>
     <div class="table-wrapper attachments">
         <table class="data table">
             <thead>
@@ -25,10 +24,5 @@
             <?php endforeach; ?>
             </tbody>
         </table>
-    </div>
-
-<?php else : ?>
-    <div class="message info empty">
-        <span><?= /* @escapeNotVerified */ __('This products does not contain any attachments.') ?></span>
     </div>
 <?php endif; ?>
