@@ -36,3 +36,6 @@
 
 ### 1.3.4 ###
 * fix for return type fix for configuration provider
+
+### 1.3.5 ###
+* do not show attachment tab on product page with no attachments
