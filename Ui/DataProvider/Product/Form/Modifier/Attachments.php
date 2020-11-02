@@ -103,7 +103,7 @@ class Attachments extends AbstractModifier
      */
     public function modifyMeta(array $meta) : array
     {
-        $attachmentsPath = Composite::CHILDREN_PATH . DIRECTORY_SEPARATOR . Composite::CONTAINER_ATTACHMENTS;
+        $attachmentsPath = Composite::CHILDREN_PATH . '/' .  Composite::CONTAINER_ATTACHMENTS;
         $attachmentsContainer['arguments']['data']['config'] = [
             'additionalClasses' => 'admin__fieldset-section',
             'componentType' => Form\Fieldset::NAME,
