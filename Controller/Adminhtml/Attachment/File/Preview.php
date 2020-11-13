@@ -17,6 +17,7 @@ use LizardMedia\ProductAttachment\Controller\DownloadProcessor;
 use LizardMedia\ProductAttachment\Model\Attachment;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\FileSystemException;
@@ -54,22 +55,23 @@ class Preview extends Action
     }
 
     /**
-     * @return ResultInterface
+     * @return ResponseInterface
      */
-    public function execute(): ResultInterface
+    public function execute(): ResponseInterface
     {
         $attachmentId = $this->getRequest()->getParam(Attachment::ID, 0);
         $attachment = $this->loadAttachmentById((int) $attachmentId);
         if ($attachment instanceof AttachmentInterface) {
             try {
-                return $this->downloadProcessor->processDownload($attachment);
+                $this->downloadProcessor->processDownload($attachment);
+                return $this->_response;
             } catch (FileSystemException $exception) {
                 $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
-                return $this->goBack();
             }
-        } else {
-            return $this->goBack();
         }
+
+        $this->_redirect->redirect($this->_response, $this->_redirect->getRefererUrl());
+        return $this->_response;
     }
 
     /**
@@ -84,13 +86,5 @@ class Preview extends Action
             $this->messageManager->addErrorMessage(__('Attachment not found.'));
             return null;
         }
-    }
-
-    /**
-     * @return Redirect
-     */
-    private function goBack(): Redirect
-    {
-        return $this->resultRedirectFactory->create()->setRefererUrl();
     }
 }
