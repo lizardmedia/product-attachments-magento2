@@ -39,3 +39,8 @@
 
 ### 1.3.5 ###
 * do not show attachment tab on product page with no attachments
+
+### 1.3.6 ###
+* PHP 7.4 compatibility
+* fix for windows issues in adminhtml
+* changing visibility of helper function in block
