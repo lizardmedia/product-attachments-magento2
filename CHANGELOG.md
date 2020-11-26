@@ -44,3 +44,8 @@
 * PHP 7.4 compatibility
 * fix for windows issues in adminhtml
 * changing visibility of helper function in block
+
+
+### 1.3.7 ###
+* fix constant attachment re-saving
+* fix for stale downloaded files in magento root
