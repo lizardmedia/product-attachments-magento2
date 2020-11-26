@@ -16,9 +16,7 @@ use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
 use LizardMedia\ProductAttachment\Controller\DownloadProcessor;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\RawFactory;
-use Magento\Framework\Controller\Result\Redirect;
-use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
@@ -55,22 +53,24 @@ class Attachment extends Action
     }
 
     /**
-     * @return ResultInterface
+     * @return ResponseInterface
      */
-    public function execute(): ResultInterface
+    public function execute(): ResponseInterface
     {
         $attachmentId = (int) $this->getRequest()->getParam('id', 0);
         $attachment = $this->loadAttachmentById($attachmentId);
 
         if ($attachment instanceof AttachmentInterface) {
             try {
-                return $this->downloadProcessor->processDownload($attachment);
+                $this->downloadProcessor->processDownload($attachment);
+                return $this->_response;
             } catch (FileSystemException $exception) {
                 $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
             }
         }
 
-        return $this->goBack();
+        $this->_redirect->redirect($this->_response, $this->_redirect->getRefererUrl());
+        return $this->_response;
     }
 
     /**
@@ -85,13 +85,5 @@ class Attachment extends Action
             $this->messageManager->addErrorMessage(__('Sorry, there was an error getting requested content.'));
             return null;
         }
-    }
-
-    /**
-     * @return Redirect
-     */
-    private function goBack(): Redirect
-    {
-        return $this->resultRedirectFactory->create()->setRefererUrl();
     }
 }

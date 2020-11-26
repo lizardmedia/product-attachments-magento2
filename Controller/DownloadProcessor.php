@@ -13,9 +13,8 @@ namespace LizardMedia\ProductAttachment\Controller;
 
 use Exception;
 use LizardMedia\ProductAttachment\Api\Data\AttachmentInterface;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
-use Magento\Framework\Controller\Result\Raw;
-use Magento\Framework\Controller\Result\RawFactory;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\Io\File;
 
@@ -36,11 +35,6 @@ class DownloadProcessor
     private $fileFactory;
 
     /**
-     * @var RawFactory
-     */
-    private $rawFactory;
-
-    /**
      * @var File
      */
     private $file;
@@ -49,36 +43,36 @@ class DownloadProcessor
      * DownloadProcessor constructor.
      * @param DownloadResourceResolver $downloadResourceResolver
      * @param FileFactory $fileFactory
-     * @param RawFactory $rawFactory
      * @param File $file
      */
     public function __construct(
         DownloadResourceResolver $downloadResourceResolver,
         FileFactory $fileFactory,
-        RawFactory $rawFactory,
         File $file
     ) {
         $this->downloadResourceResolver = $downloadResourceResolver;
         $this->fileFactory = $fileFactory;
-        $this->rawFactory = $rawFactory;
         $this->file = $file;
     }
 
     /**
      * @param AttachmentInterface $attachment
-     * @return Raw
+     * @return void
      * @throws FileSystemException
      */
-    public function processDownload(AttachmentInterface $attachment): Raw
+    public function processDownload(AttachmentInterface $attachment): void
     {
-        /** @var $raw Raw */
         try {
-            $raw = $this->rawFactory->create();
-            $response = $this->fileFactory->create(
-                basename($this->downloadResourceResolver->resolveResource($attachment)),
-                $this->readFile($attachment)
+            $name = basename($this->downloadResourceResolver->resolveResource($attachment));
+            $this->fileFactory->create(
+                $name,
+                [
+                    'type' => 'string',
+                    'value' => $this->readFile($attachment),
+                    'rm' => true
+                ],
+                DirectoryList::TMP
             );
-            return $raw->renderResult($response);
         } catch (Exception $exception) {
             throw new FileSystemException(__('File could not be downloaded'));
         }
