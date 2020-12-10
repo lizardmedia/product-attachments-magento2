@@ -49,3 +49,6 @@
 ### 1.3.7 ###
 * fix constant attachment re-saving
 * fix for stale downloaded files in magento root
+
+### 1.3.8 ###
+* fix for not saving attachment

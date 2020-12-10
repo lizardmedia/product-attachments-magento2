@@ -12,8 +12,8 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:DataObject/etc/fieldset.xsd">
     <scope id="global">
         <fieldset id="downloadable_data">
-            <field name="id">
-                <aspect name="to_attachment" targetField="attachment_id"/>
+            <field name="attachment_id">
+                <aspect name="to_attachment" targetField="id"/>
             </field>
             <field name="attachment_type">
                 <aspect name="to_attachment" targetField="attachment_type"/>
