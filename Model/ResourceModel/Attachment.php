@@ -37,17 +37,17 @@ class Attachment extends AbstractDb
     {
         $connection = $this->getConnection();
         $attachmentTitleTable = $this->getTable(AttachmentModel::TITLE_TABLE);
-        $bind = [':id' => (int) $attachment->getId(), ':store_id' => (int) $attachment->getStoreId()];
+        $bind = [':attachment_id' => (int) $attachment->getId(), ':store_id' => (int) $attachment->getStoreId()];
 
         $select = $connection->select()->from(
             $attachmentTitleTable
         )->where(
-            'id = :id AND store_id = :store_id'
+            'attachment_id = :attachment_id AND store_id = :store_id'
         );
 
         if ($connection->fetchOne($select, $bind)) {
             $where = [
-                'id = ?' => (int) $attachment->getId(),
+                'attachment_id = ?' => (int) $attachment->getId(),
                 'store_id = ?' => (int) $attachment->getStoreId(),
             ];
             if ($attachment->getUseDefaultTitle()) {
