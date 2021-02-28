@@ -55,3 +55,6 @@
 
 ### 1.3.9 ###
 * compatibility with bundle and grouped product for Magento 2.3 and 2.4 
+
+### 1.3.10 ###
+* fix for title - attachment binding
