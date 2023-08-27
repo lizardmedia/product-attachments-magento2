@@ -2,7 +2,7 @@
     "name": "lizardmedia/module-product-attachments",
     "description": "Products attachment by LizardMedia",
     "require": {
-        "php": "~7.1.0|~7.2.0|~7.3.0|~7.4.0",
+        "php": "~7.1.0|~7.2.0|~7.3.0|~7.4.0|~8.1.0",
         "magento/module-catalog": "*",
         "magento/module-downloadable": "*",
         "magento/module-store": "*",
